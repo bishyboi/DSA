@@ -18,3 +18,5 @@ target_link_libraries(
         GTest::GTest
         suffix
 )
+
+add_test(suffix_gtest suffix_test)

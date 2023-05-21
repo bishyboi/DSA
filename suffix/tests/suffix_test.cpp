@@ -15,9 +15,13 @@ TEST(HelloTest, BasicAssertions) {
   // Expect equality.
   EXPECT_EQ(7 * 6, 42);
 
-  EXPECT_EQ(3,6);
+  EXPECT_EQ(6,6);
 }
 
+TEST(Class2, MessingAround)
+{
+  EXPECT_NE(4,5);
+}
 int main(int argc, char** argv)
 {
   ::testing::InitGoogleTest(&argc, argv);
