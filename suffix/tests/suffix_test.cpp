@@ -47,10 +47,39 @@ TEST(BasicExamples, SkippingTooFar)
   int L=3;
   EXPECT_EQ(5, suffixCount(S,L));
 }
+
+TEST(BasicExamples, SkippingOnEvens)
+{
+  std::string S = "aaaaaa";
+  int L=3;
+  EXPECT_EQ(2, suffixCount(S,L));
+}
+
+TEST(BasicExamples, DoubleCount2)
+{
+  std::string S = "AABAACAADAABAABA";
+  int L = 4;
+  EXPECT_EQ(2, suffixCount(S,L));
+}
+
+TEST(BasicExamples, CheckingEnds)
+{
+  std::string S = "ABAAABAAAAA";
+  int L = 4;
+  EXPECT_EQ(1, suffixCount(S,L));
+}
+
 TEST(BreakYoCode, L0)
 {
   std::string S = "";
   int L=0;
+  EXPECT_EQ(0, suffixCount(S,L));
+}
+
+TEST(BreakYoCode, LGTS)
+{
+  std::string S = "aa";
+  int L=6;
   EXPECT_EQ(0, suffixCount(S,L));
 }
 
