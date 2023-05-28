@@ -1,4 +1,4 @@
-#include "books.h"
+#include "include/books.h"
 
 set<string> getRepo(vector<vector<string>> arr)
 {
@@ -15,3 +15,22 @@ set<string> getRepo(vector<vector<string>> arr)
 
     return book_repo;
 }
+
+void printSet(set<string> set)
+{
+    for(auto it = set.begin(); it != set.end(); it++)
+    {
+        std::cout<< *it << endl;
+    }
+}
+
+int main(){
+    vector <vector<string>> library
+    {
+        {"don quixote", "1984", "freakonomics"},
+        {"burnt sugar", "burnt sugar", "midnight's children"},
+        {"molecular biology", "don quixote", "burnt sugar"}
+    };
+
+    printSet(getRepo(library));
+    }
