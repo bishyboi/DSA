@@ -16,7 +16,7 @@ target_link_libraries(
     suffix_test
     PRIVATE
         GTest::GTest
-        suffix
+        suffix_count
 )
 
 add_test(suffix_gtest suffix_test)
