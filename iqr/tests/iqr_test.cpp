@@ -1,4 +1,4 @@
-#include "../src/include/iqr.h"
+#include "iqr.h"
 #include <gtest/gtest.h>
 
 
@@ -72,7 +72,7 @@ TEST(EdgeCase, s4)
     EXPECT_EQ(2.0, interQuartile(head));
 }
 
-TEST(TestingFunctionality, Printing)
+TEST(UnitTestingFunctionality, Printing)
 {
     int set[5] = {1,2,3,4,5};
 

@@ -26,10 +26,26 @@ Node* insertEnd(Node* head, int key)
 
 float interQuartile(Node* head)
 {
-    Node *q1 = nullptr;
-    Node *q3 = nullptr;
+    Node *q1 = head;
+    Node *q3 = head;
+    Node *tail= head;
 
-    return 0.0;   
+    int count=0;
+    while(tail != nullptr)
+    {
+
+        //logic for determining when to move q1 and q3
+        if(count%4 >= 1)
+            q3 = q3->next;
+        
+        if(count%4 ==3)
+            q1 = q1->next;
+        
+        tail = tail->next;
+        count++;
+    }
+
+    return ((float)(q1->value +q3->value))/2.0;   
 }
 
 Node* setToList(int arr[], int size)
