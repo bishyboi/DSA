@@ -1,0 +1,13 @@
+make the
+/src
+/tests
+/build
+
+folders
+
+use cmake-gui to configure to put build files into /build
+use .gitignore to ignore the /build folders
+
+COMPILE USING CMAKE:BUILD COMMAND NOT RUN BUILD TASK
+
+if not compiling, likely due to cache error, rerun cmake-gui and reconfigure/generate and then run cmake:build
