@@ -19,4 +19,4 @@ target_link_libraries(
         iqr
 )
 
-add_test(iqr_gtest iqr_test)
+add_test(iqr_gtest iqr_test)    

@@ -1,5 +1,6 @@
-#include "iqr.h"
+#include "../src/include/iqr.h"
 #include <gtest/gtest.h>
+
 
 TEST(Basic, s5)
 {
@@ -67,7 +68,7 @@ TEST(EdgeCase, s3)
 TEST(EdgeCase, s4)
 {
     int set[4] = {1,2,3,4};
-    Node* head = setToList(set, sizeof(set), sizeof(int));
+    Node* head = setToList(set, sizeof(set) / sizeof(int));
     EXPECT_EQ(2.0, interQuartile(head));
 }
 
