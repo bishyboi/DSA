@@ -34,6 +34,7 @@ float interQuartile(Node* head)
     while(tail != nullptr)
     {
 
+        // TODO: add logic for when q1 and q2 needs to account for q1 and q3 lying on evens (must average two numbers)
         //logic for determining when to move q1 and q3
         if(count%4 >= 1)
             q3 = q3->next;
