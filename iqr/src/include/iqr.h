@@ -32,7 +32,25 @@ float interQuartile(Node* head)
     return 0.0;   
 }
 
-Node* setToList(int arr[])
+Node* setToList(int arr[], int size)
 {
-    
+    Node *head = new Node();
+    head->value = arr[0];
+
+    for(int i=1; i< size; i++)
+    {
+        insertEnd(head, arr[i]);
+    }
+    return head;
+}
+
+void printLinkedList(Node* head)
+{
+    Node *current = head;
+
+    while(current != nullptr)
+    {
+        std::cout<< current->value << ", ";
+        current = current->next;
+    }
 }
