@@ -31,7 +31,7 @@ float interQuartile(Node* head)
     Node *tail= head;
 
     int count=0;
-    while(tail != nullptr)
+    while(tail->next != nullptr)
     {
 
         // TODO: add logic for when q1 and q2 needs to account for q1 and q3 lying on evens (must average two numbers)
@@ -46,7 +46,15 @@ float interQuartile(Node* head)
         count++;
     }
 
-    return ((float)(q1->value +q3->value))/2.0;   
+    if(count%2==1)
+    {
+        return q3->value - q1->value;
+    }
+    else
+    {
+        return (float)((q3->value + q3->next->value)/2.0) - (float)((q1->value + q1->next->value)/2.0);   
+    }
+    
 }
 
 Node* setToList(int arr[], int size)
