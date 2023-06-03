@@ -31,33 +31,31 @@ float interQuartile(Node* head)
     Node *q3 = head;
     Node *tail= head;
 
-    int count=0;
+    int size=0;
     while(tail->next != nullptr)
     {
-        count++;
+        size++; // On size = 1, size is determined after checking if there is a first element
         tail = tail->next;
 
-        // TODO: add logic for when q1 and q2 needs to account for q1 and q3 lying on evens (must average two numbers)
-        //logic for determining when to move q1 and q3
-        if((count%4) > 0)
+        if(size%4  >0) // In a cycle of 4 moves, Q3 skips the first move and does all others
             q3 = q3->next;
         
-        if((count%4) > 2 )
+        if(size%4 ==3) // In a cycle of 4 moves, Q1 skips the first 3 moves and only moves on the last
             q1 = q1->next;
-        
     }
 
-    // This really should be right...
-    if(count%4>1)
+    switch (size%4)
     {
-        iqr =  q3->value - q1->value;
-    }
-    else
-    {
-        iqr = (float)((q3->value + q3->next->value)/2.0) - (float)((q1->value + q1->next->value)/2.0);   
+    case 0:
+        iqr = ((q3->value + q3->next->value)/2.0) - ((q1->value + q1->next->value)/2.0);
+        break;
+    
+    case 1:
+        iqr = ((q3->next->next->value + q3->next->value)/2.0) - ((q1->value + q1->next->value)/2.0);
+        break;
     }
 
-    return iqr;    
+    return iqr;
 }
 
 Node* setToList(int arr[], int size)

@@ -29,6 +29,20 @@ TEST(Basic, s9)
     EXPECT_EQ(5.0, interQuartile(head));
 }
 
+TEST(Basic, s10)
+{
+    int set[10] = {1,2,3,4,5,6,7,8,9,10};
+    Node* head = setToList(set, sizeof(set) / sizeof(int));
+    EXPECT_EQ(5.0, interQuartile(head));    
+}
+
+TEST(Basic, s11)
+{
+    int set[11] = {1,2,3,4,5,6,7,8,9,10,11};
+    Node* head = setToList(set, sizeof(set) / sizeof(int));
+    EXPECT_EQ(6.0, interQuartile(head));     
+}
+
 TEST(Basic, s20)
 {
     int set[20] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
