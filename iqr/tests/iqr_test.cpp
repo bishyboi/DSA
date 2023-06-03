@@ -1,7 +1,6 @@
 #include "../src/include/iqr.h"
 #include <gtest/gtest.h>
 
-
 TEST(Basic, s5)
 {
     int set[5] = {1,2,3,4,5};
@@ -35,6 +34,41 @@ TEST(Basic, s20)
     int set[20] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
     Node* head = setToList(set, sizeof(set) / sizeof(int));
     EXPECT_EQ(10.0, interQuartile(head));
+}
+
+TEST(Randomized, s5)
+{
+    int set[5] = {3, 7, 13, 14, 25};
+    Node* head = setToList(set, sizeof(set) / sizeof(int));
+    EXPECT_EQ(14.5, interQuartile(head));
+}
+
+TEST(Randomized, s6)
+{
+    int set[6] = {0, 5, 9, 15, 45, 46};
+    Node* head = setToList(set, sizeof(set) / sizeof(int));
+    EXPECT_EQ(40, interQuartile(head));
+}
+
+TEST(Randomized, s7)
+{
+    int set[7] = {1, 18, 80, 91, 95, 103, 107};
+    Node* head = setToList(set, sizeof(set) / sizeof(int));
+    EXPECT_EQ(85, interQuartile(head));
+}
+
+TEST(Randomized, s8)
+{
+    int set[8] = {8, 12, 13, 17, 22, 29, 31, 40};
+    Node* head = setToList(set, sizeof(set) / sizeof(int));
+    EXPECT_EQ(17.5, interQuartile(head));
+}
+
+TEST(Randomized, s9)
+{
+    int set[9] = {2, 6, 6, 8, 9, 10, 15, 16, 33};
+    Node* head = setToList(set, sizeof(set) / sizeof(int));
+    EXPECT_EQ(9.5, interQuartile(head));
 }
 
 TEST(EdgeCase, s0)

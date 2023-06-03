@@ -26,6 +26,7 @@ Node* insertEnd(Node* head, int key)
 
 float interQuartile(Node* head)
 {
+    float iqr =0.0;
     Node *q1 = head;
     Node *q3 = head;
     Node *tail= head;
@@ -33,28 +34,30 @@ float interQuartile(Node* head)
     int count=0;
     while(tail->next != nullptr)
     {
+        count++;
+        tail = tail->next;
 
         // TODO: add logic for when q1 and q2 needs to account for q1 and q3 lying on evens (must average two numbers)
         //logic for determining when to move q1 and q3
-        if(count%4 >= 1)
+        if((count%4) > 0)
             q3 = q3->next;
         
-        if(count%4 ==3)
+        if((count%4) > 2 )
             q1 = q1->next;
         
-        tail = tail->next;
-        count++;
     }
 
-    if(count%2==1)
+    // This really should be right...
+    if(count%4>1)
     {
-        return q3->value - q1->value;
+        iqr =  q3->value - q1->value;
     }
     else
     {
-        return (float)((q3->value + q3->next->value)/2.0) - (float)((q1->value + q1->next->value)/2.0);   
+        iqr = (float)((q3->value + q3->next->value)/2.0) - (float)((q1->value + q1->next->value)/2.0);   
     }
-    
+
+    return iqr;    
 }
 
 Node* setToList(int arr[], int size)
