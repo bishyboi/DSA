@@ -5,7 +5,7 @@ TEST(Basic, s5)
 {
     int set[5] = {1,2,3,4,5};
     Node* head = setToList(set, sizeof(set) / sizeof(int));
-    EXPECT_EQ(2.0, interQuartile(head));
+    EXPECT_EQ(3.0, interQuartile(head));
 }
 
 TEST(Basic, s7)
@@ -52,9 +52,9 @@ TEST(Basic, s20)
 
 TEST(Randomized, s5)
 {
-    int set[5] = {3, 7, 13, 14, 25};
+    int set[5] = {0, 15, 27, 1034, 2048};
     Node* head = setToList(set, sizeof(set) / sizeof(int));
-    EXPECT_EQ(14.5, interQuartile(head));
+    EXPECT_EQ(1533.5, interQuartile(head));
 }
 
 TEST(Randomized, s6)
