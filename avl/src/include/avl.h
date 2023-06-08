@@ -79,11 +79,33 @@ struct AVLTree
      *
      * @param name Name of the Student
      * @param id Unique 8-Digit Integer ID number
+     * @return True if the node to be inserted does not already exist.
+     * @return False if the node to be inserted already exists, in which nothing is inserted
      */
     bool insert(const std::string name, const int id)
     {
         std::shared_ptr<Node> insertion = std::make_shared<Node>(name, id);
 
+        if(this->root == nullptr)
+        {
+            this->root = insertion;
+            return true;            
+        }
+
+        std::shared_ptr current = this->root;
+
+        return insertOnNode(current, insertion);
+    }
+
+    /**
+     * @brief 
+     * Inserts a node into the AVL tree
+     * @param insertion Node to be inserted
+     * @return True if the node to be inserted does not already exist.
+     * @return False if the node to be inserted already exists, in which nothing is inserted
+     */
+    bool insert(std::shared_ptr<Node> insertion)
+    {
         if(this->root == nullptr)
         {
             this->root = insertion;
@@ -114,6 +136,7 @@ struct AVLTree
             else
             {
                 current->right = std::move(insertion);
+                current->right->parent = current;
                 return true;
             }
         }
@@ -126,6 +149,7 @@ struct AVLTree
             else
             {
                 current->left = std::move(insertion);
+                current->left->parent = current;
                 return true;
             }
         }

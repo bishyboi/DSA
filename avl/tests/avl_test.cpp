@@ -43,6 +43,17 @@ TEST(Basic, SimpleInsertionRight)
     EXPECT_EQ(insert_id, avl.root->left->getID());
 }
 
+TEST(Basic, FourInsertionsInOrderPrint)
+{
+    AVLTree avl = AVLTree();
+    avl.insert("jeff", 2);
+    avl.insert("jeef", 1);
+    avl.insert("jef", 4);
+    avl.insert("bob", 3);
+    avl.insert("fatima", 3);
+
+    avl.printInOrder();    
+}
 
 int main(int argc, char **argv)
 {
