@@ -6,6 +6,9 @@
 */
 
 // int main(){
+//     AVLTree avl = AVLTree("Bishoy", 12345678);
+
+//     std::cout<< *(avl.root->name) << ", " << *(avl.root->gator_id); 
 // 	return 0;
 // }
 
