@@ -54,8 +54,7 @@ struct AVLTree
     /**
      * @brief Construct a new AVLTree object
      */
-    AVLTree()
-    {}
+    AVLTree() {}
 
     /**
      * @brief Construct a new AVLTree object
@@ -86,10 +85,10 @@ struct AVLTree
     {
         std::shared_ptr<Node> insertion = std::make_shared<Node>(name, id);
 
-        if(this->root == nullptr)
+        if (this->root == nullptr)
         {
             this->root = insertion;
-            return true;            
+            return true;
         }
 
         std::shared_ptr current = this->root;
@@ -98,7 +97,7 @@ struct AVLTree
     }
 
     /**
-     * @brief 
+     * @brief
      * Inserts a node into the AVL tree
      * @param insertion Node to be inserted
      * @return True if the node to be inserted does not already exist.
@@ -106,10 +105,10 @@ struct AVLTree
      */
     bool insert(std::shared_ptr<Node> insertion)
     {
-        if(this->root == nullptr)
+        if (this->root == nullptr)
         {
             this->root = insertion;
-            return true;            
+            return true;
         }
 
         std::shared_ptr current = this->root;
@@ -117,10 +116,14 @@ struct AVLTree
         return insertOnNode(current, insertion);
     }
 
-    // Detect if greater than or less than,
-    // then check if theres a node already there.
-    //  If theres a node already there,
-    // repeat the check until there isn't a node where its about to be inserted
+    /**
+     * @brief Inserts a node into the AVL tree, targeting a specific node and its subtrees
+     *
+     * @param current is the node to begin looking at for insertion
+     * @param insertion is the node that is being inserted
+     * @return True if the node does not already exist
+     * @return False if the node is already in the AVL tree, in which nothing is inserted
+     */
     bool insertOnNode(std::shared_ptr<Node> current, std::shared_ptr<Node> insertion)
     {
         if (insertion->getID() == current->getID())
@@ -164,7 +167,6 @@ struct AVLTree
      * If deletion is successful, print “successful”.
      * If the ID does not exist within the tree, print “unsuccessful”.
      * You must prioritize replacing a removed node with its in-order successor for the case where the deleted node has two children.
-     *
      * @param id Unique 8-Digit ID number
      */
     void remove(const int id)
@@ -203,25 +205,109 @@ struct AVLTree
     /**
      * @brief
      * Print out a comma separated in-order traversal of the names in the tree. LNR
+     * @return String containing the list of nodes in order
      */
-    void printInOrder()
+    std::string printInOrder()
     {
+        std::string printString = printInOrder(this->root);
+
+        printString.erase(0, 2);
+        printString.erase(printString.length() - 2, 2);
+        return printString;
+    }
+
+    /**
+     * @brief
+     * Prints out a comma separated in-order traversal of the names in the tree, starting at a certain node
+     * @param current Starting node to begin the in-order traversal
+     * @return String containing the list of nodes in order
+     */
+    std::string printInOrder(std::shared_ptr<Node> current)
+    {
+        if (current == nullptr)
+        {
+            return "";
+        }
+        else if (current->left == nullptr && current->right == nullptr)
+        {
+            return current->getName();
+        }
+        else
+        {
+            return printInOrder(current->left) + ", " + current->getName() + ", " + printInOrder(current->right);
+        }
     }
 
     /**
      * @brief
      * Print out a comma separated pre-order traversal of the names in the tree. NLR
+     * @return String containing the names of students from a pre-order traversal
      */
-    void printPreOrder()
+    std::string printPreOrder()
     {
+        std::string printString = printPreOrder(this->root);
+
+        printString.erase(0, 2);
+        printString.erase(printString.length() - 2, 2);
+        return printString;
+    }
+
+    /**
+     * @brief
+     * Prints out a comma separated pre-order traversal of the names in the tree, starting at a certain node
+     * @param current Starting node to begin the pre-order traversal
+     * @return String containing the list of nodes in pre-order
+     */
+    std::string printPreOrder(std::shared_ptr<Node> current)
+    {
+        if (current == nullptr)
+        {
+            return "";
+        }
+        else if (current->left == nullptr && current->right == nullptr)
+        {
+            return current->getName();
+        }
+        else
+        {
+            return current->getName() + ", " + printPreOrder(current->left) + ", " + printPreOrder(current->right);
+        }
     }
 
     /**
      * @brief
      * Print out a comma separated post-order traversal of the names in the tree. LRN
+     * @return Stromg containing the list of students from a post-order traversal
      */
-    void printPostOrder()
+    std::string printPostOrder()
     {
+        std::string printString = printPostOrder(this->root);
+
+        printString.erase(0, 2);
+        printString.erase(printString.length() - 2, 2);
+        return printString;
+    }
+
+    /**
+     * @brief
+     * Prints out a comma separated post-order traversal of the names in the tree, starting at a certain node
+     * @param current Starting node to begin the post-order traversal
+     * @return String containing the list of nodes in post-order
+     */
+    std::string printPostOrder(std::shared_ptr<Node> current)
+    {
+        if (current == nullptr)
+        {
+            return "";
+        }
+        else if (current->left == nullptr && current->right == nullptr)
+        {
+            return current->getName();
+        }
+        else
+        {
+            return printPostOrder(current->left) + ", " + printPostOrder(current->right) + ", " + current->getName();
+        }
     }
 
     /**

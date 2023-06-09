@@ -43,18 +43,29 @@ TEST(Basic, SimpleInsertionRight)
     EXPECT_EQ(insert_id, avl.root->left->getID());
 }
 
-TEST(Basic, FourInsertionsInOrderPrint)
+TEST(Basic, InsertionFalse)
 {
     AVLTree avl = AVLTree();
     avl.insert("jeff", 2);
     avl.insert("jeef", 1);
     avl.insert("jef", 4);
     avl.insert("bob", 3);
-    avl.insert("fatima", 3);
 
-    avl.printInOrder();    
+    EXPECT_EQ(false, avl.insert("fatima", 3)); 
 }
 
+TEST(Basic, InOrderTraversalPrint)
+{
+    AVLTree avl = AVLTree("aubergine", 0);
+    avl.insert("cat stevens", 2);
+    avl.insert("barry allen", 1);
+    avl.insert("the flash", 6);
+    avl.insert("kal-el", 4);
+    avl.insert("clark kent", 3);
+    avl.insert("superman", 5);
+
+    EXPECT_EQ("aubergine, barry allen, cat stevens, clark kent, kal-el, superman, the flash", avl.printInOrder());
+}
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
