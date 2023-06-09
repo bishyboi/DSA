@@ -66,6 +66,33 @@ TEST(Basic, InOrderTraversalPrint)
 
     EXPECT_EQ("aubergine, barry allen, cat stevens, clark kent, kal-el, superman, the flash", avl.printInOrder());
 }
+
+TEST(BST_NOT_BALANCED, PreOrderTraversalPrint)
+{
+    AVLTree avl = AVLTree("aubergine", 0);
+    avl.insert("cat stevens", 2);
+    avl.insert("barry allen", 1);
+    avl.insert("the flash", 6);
+    avl.insert("kal-el", 4);
+    avl.insert("clark kent", 3);
+    avl.insert("superman", 5);
+
+    EXPECT_EQ("aubergine, cat stevens, barry allen, the flash, kal-el, clark kent, superman", avl.printPreOrder());
+}
+
+TEST(BST_NOT_BALANCED, PostOrderTraversalPrint)
+{
+    AVLTree avl = AVLTree("aubergine", 0);
+    avl.insert("cat stevens", 2);
+    avl.insert("barry allen", 1);
+    avl.insert("the flash", 6);
+    avl.insert("kal-el", 4);
+    avl.insert("clark kent", 3);
+    avl.insert("superman", 5);
+
+    EXPECT_EQ("barry allen, clark kent, superman, kal-el, the flash, cat stevens, aubergine", avl.printPostOrder());
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

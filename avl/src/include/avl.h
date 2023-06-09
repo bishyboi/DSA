@@ -247,7 +247,6 @@ struct AVLTree
     {
         std::string printString = printPreOrder(this->root);
 
-        printString.erase(0, 2);
         printString.erase(printString.length() - 2, 2);
         return printString;
     }
@@ -284,7 +283,6 @@ struct AVLTree
         std::string printString = printPostOrder(this->root);
 
         printString.erase(0, 2);
-        printString.erase(printString.length() - 2, 2);
         return printString;
     }
 
