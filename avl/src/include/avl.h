@@ -17,6 +17,7 @@ struct AVLTree
 
         std::unique_ptr<std::string> name;
         std::unique_ptr<int> gator_id;
+        std::unique_ptr<int> balance_factor=0;
 
         Node(const std::string name, const int id, std::shared_ptr<Node> p = nullptr,
              std::shared_ptr<Node> l = nullptr, std::shared_ptr<Node> r = nullptr)
@@ -156,6 +157,42 @@ struct AVLTree
                 return true;
             }
         }
+
+        //TODO: UPDATE HEIGHTS
+    }
+
+    /**
+     * @brief Rotates an upper and lower node left and right
+     * 
+     * @param upper 
+     * @param lower 
+     */
+    void rotateRight(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
+    {
+        std::shared_ptr<Node> beta = lower->right;
+
+        lower->right.reset();
+        beta->parent.reset();
+
+        upper->left = beta;
+        beta->parent = upper;
+        lower->right = upper;
+
+        //TODO: UPDATE HEIGHTS
+    }
+
+    void rotateLeft(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
+    {
+        std::shared_ptr<Node> alpha = lower->left;
+
+        lower->left.reset();
+        alpha->parent.reset();
+
+        upper->right = alpha;
+        alpha->parent = upper;
+        lower->left = upper;
+
+        //TODO: UPDATE HEIGHTS
     }
 
     /**
