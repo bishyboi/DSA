@@ -34,10 +34,11 @@ void destruct(TreeNode* root)
 
 int sumOfLevel(TreeNode* root, int level) 
 {
-    TreeNode* parent = root;
-
-    if(parent == nullptr)
+    if(root == nullptr)
         return 0;
-    
-    
+
+    if(level==0)
+        return root->val;
+    else
+        return sumOfLevel(root->left, level-1) + sumOfLevel(root->right, level-1);
 }
