@@ -5,6 +5,11 @@
 // findHeight() should be recursive, returning the height of the next node +1
 // findBalanceFactor() should be recursive, returning the sums of left and right heights
 
+/**
+ * Every time a node is inserted, the height of all parent nodes should be adjusted (add one if its the left node, subtract if its the right node)
+ * 
+ */
+
 // left-right on  0, -1, 2
 
 struct AVLTree
