@@ -7,7 +7,7 @@
 
 /**
  * Every time a node is inserted, the height of all parent nodes should be adjusted (add one if its the left node, subtract if its the right node)
- * 
+ *
  */
 
 // left-right on  0, -1, 2
@@ -22,7 +22,7 @@ struct AVLTree
 
         std::unique_ptr<std::string> name;
         std::unique_ptr<int> gator_id;
-        std::unique_ptr<int> balance_factor=0;
+        std::unique_ptr<int> balance_factor = 0;
 
         Node(const std::string name, const int id, std::shared_ptr<Node> p = nullptr,
              std::shared_ptr<Node> l = nullptr, std::shared_ptr<Node> r = nullptr)
@@ -30,6 +30,7 @@ struct AVLTree
             this->left = l;
             this->right = r;
             this->parent = p;
+
             this->name = std::make_unique<std::string>(name);
             this->gator_id = std::make_unique<int>(id);
         }
@@ -42,6 +43,7 @@ struct AVLTree
 
             this->name.reset();
             this->gator_id.reset();
+            this->balance_factor.reset();
         }
 
         std::string getName()
@@ -53,6 +55,22 @@ struct AVLTree
         {
             return *(this->gator_id);
         }
+
+        int getBF()
+        {
+            return *(this->balance_factor);
+        }
+
+        void setBF(int x)
+        {
+            *(this->balance_factor) = x;
+        }
+
+        void addBF(int x)
+        {
+            *(this->balance_factor) += x;
+        }
+
     };
 
     std::shared_ptr<Node> root = nullptr;
@@ -146,6 +164,9 @@ struct AVLTree
             {
                 current->right = std::move(insertion);
                 current->right->parent = current;
+
+                retraceInsert(current->right);
+
                 return true;
             }
         }
@@ -159,18 +180,19 @@ struct AVLTree
             {
                 current->left = std::move(insertion);
                 current->left->parent = current;
+
+                retraceInsert(current->left);
+
                 return true;
             }
         }
-
-        //TODO: UPDATE HEIGHTS
     }
 
     /**
      * @brief Rotates an upper and lower node left and right
-     * 
-     * @param upper 
-     * @param lower 
+     *
+     * @param upper
+     * @param lower
      */
     void rotateRight(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
     {
@@ -183,7 +205,8 @@ struct AVLTree
         beta->parent = upper;
         lower->right = upper;
 
-        //TODO: UPDATE HEIGHTS
+        lower->setBF(0);
+        upper->setBF(0);
     }
 
     void rotateLeft(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
@@ -197,9 +220,38 @@ struct AVLTree
         alpha->parent = upper;
         lower->left = upper;
 
-        //TODO: UPDATE HEIGHTS
+        lower->setBF(0);
+        upper->setBF(0);
     }
 
+    void retraceInsert(std::shared_ptr<Node> leaf)
+    {
+        // CHeck if the last ancestor (or the root) has been updated
+        if (leaf == nullptr)
+            return;
+
+        // FIXME: Throws errors on root node since root->parent == nullptr
+        // Maybe i should start from a node and check its children? that retrace would prevent an error on nullptr
+        // then i could accidentally rotate on a nullptr
+        // its probably best for me to just code an edge case for root nodes
+
+        if (leaf->parent->left == leaf)
+            leaf->parent->addBF(1);
+        else
+            leaf->parent->addBF(-1);
+
+
+        if (leaf->parent->getBF() == 0)
+        {
+            return;
+
+        } else if (leaf->parent->getBF() == -1 || leaf->parent->getBF() ==1) {
+            retraceInsert(leaf->parent);
+        } else{
+
+            if(leaf->parent)
+        }
+    }
     /**
      * @brief
      * Find and remove the account with the specified ID from the tree.
