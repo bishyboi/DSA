@@ -6,13 +6,19 @@
 */
 
 int main(){
-    AVLTree avl = AVLTree();
+    AVLTree avl = AVLTree("1", 1);
+    
+    std::string s;
 
-    avl.insert("1", 1);
+    //avl.insert("1", 1);
+    s = avl.printPreOrder();
+
     avl.insert("3", 3);
-    avl.insert("2", 2);
+    s = avl.printPreOrder();
 
-    std::string s = avl.printPreOrder();
+    avl.insert("2", 2);
+    s = avl.printPreOrder();
+
 
     std::cout<< s;
 }

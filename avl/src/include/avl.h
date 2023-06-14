@@ -114,8 +114,8 @@ struct AVLTree
             return true;
         }
 
-        std::shared_ptr current = this->root;
-
+        std::shared_ptr<Node> current = this->root;
+        current->getID();
         return insertOnNode(current, insertion);
     }
 
@@ -149,6 +149,7 @@ struct AVLTree
      */
     bool insertOnNode(std::shared_ptr<Node> current, std::shared_ptr<Node> insertion)
     {
+
         if (insertion->getID() == current->getID())
         {
             return false;
@@ -359,8 +360,7 @@ struct AVLTree
             }
             else
             {
-                rotateLeft(lower, lower->right);
-                rotateRight(upper, lower->left);
+                rotateLeftRight(lower, lower->right);
             }
         }
         else if (upper->getBF() == -2)
@@ -371,10 +371,7 @@ struct AVLTree
             }
             else
             {
-                rotateRight(lower, lower->left);
-                // if(lower->left ==nullptr)
-                //     std::cout<<"LOWER->LEFT IS NULL";
-                rotateLeft(upper, lower->right);
+                rotateRightLeft(upper, lower);
             }
         }
 
