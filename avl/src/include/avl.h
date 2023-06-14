@@ -260,7 +260,10 @@ struct AVLTree
     void rotateRightLeft(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
     {
         std::shared_ptr<Node> alpha = lower->left;
+        std::shared_ptr<Node> alpha_l = alpha->left;
+        std::shared_ptr<Node> alpha_r = alpha->right;
 
+        // is this dropping alpha's previous children?? it looks like it
         // Shared pointers automatically reset on reassignment!!!
         alpha->parent = upper->parent;
         alpha->left = upper;
@@ -269,8 +272,8 @@ struct AVLTree
         upper->parent = alpha;
         lower->parent = alpha;
 
-        upper->right = alpha->left;
-        lower->left = alpha->right;
+        upper->right = alpha_l;
+        lower->left = alpha_r;
 
         // Reassigning the original upper's parent's child node so that everything is directed properly
         if (alpha->parent)
@@ -296,14 +299,17 @@ struct AVLTree
     
     void rotateLeftRight(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
     {
+        std::cout<< "peanuts";
         std::shared_ptr<Node> beta = lower->right;
+        std::shared_ptr<Node> beta_l = beta->left;
+        std::shared_ptr<Node> beta_r = beta->right;
 
         beta->parent = upper->parent;
         beta->left = lower;
         beta->right = upper;
 
-        lower->right = beta->left;
-        upper->left = beta->right;
+        lower->right = beta_l;
+        upper->left = beta_r;
 
         lower->parent = beta;
         upper->parent = beta;
@@ -360,7 +366,7 @@ struct AVLTree
             }
             else
             {
-                rotateLeftRight(lower, lower->right);
+                rotateLeftRight(upper, lower);
             }
         }
         else if (upper->getBF() == -2)
@@ -506,7 +512,7 @@ struct AVLTree
     {
         std::string printString = printPostOrder(this->root);
 
-        printString.erase(0, 1);
+        printString.erase(0, 2);
         return printString;
     }
 
