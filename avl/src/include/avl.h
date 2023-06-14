@@ -547,6 +547,31 @@ struct AVLTree
         
     }
 
+
+    int getHeight()
+    {
+        return getHeight(this->root);
+    }
+
+    int getHeight(std::shared_ptr<Node> current)
+    {
+        if (!current)
+        {
+            return 0;
+        }
+
+        std::shared_ptr<Node> left  = current->left;
+        std::shared_ptr<Node> right = current->right;
+
+        int height_L = 1 + getHeight(left);
+        int height_R = 1 + getHeight(right);
+
+        if(height_L> height_R)
+            return height_L;
+        else
+            return height_R;
+    }
+
     /**
      * @brief
      * Remove the Nth GatorID from the in-order traversal of the tree (N = 0 for the first item, etc).
