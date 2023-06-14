@@ -197,23 +197,30 @@ struct AVLTree
     {
         std::shared_ptr<Node> beta = lower->right;
 
-        if(beta)
+        if (beta)
         {
             beta->parent.reset();
             beta->parent = upper;
         }
 
-        upper->left.reset();
-        upper->left = beta;
-        
-        lower->right.reset();
         lower->right = upper;
-
-        lower->parent.reset();
         lower->parent = upper->parent;
-        
-        upper->parent.reset();
+
+        upper->left = beta;
         upper->parent = lower;
+
+        // Reassigning the original upper's parent's child node so that everything is directed properly
+        if (lower->parent)
+        {
+            if (lower->getID() < lower->parent->getID())
+                lower->parent->left = lower;
+            else
+                lower->parent->right = lower;
+        }
+        else
+        {
+            this->root = lower;
+        }
 
         lower->setBF(0);
         upper->setBF(0);
@@ -223,25 +230,29 @@ struct AVLTree
     {
         std::shared_ptr<Node> alpha = lower->left;
 
-        //FIXME: SegFault when these are nullptrs, just add checks for nullptrs and this *should* be fixed
-        
-        if(alpha)
-        {
-            alpha->parent.reset();
+        // FIXME: SegFault when these are nullptrs, just add checks for nullptrs and this *should* be fixed
+
+        if (alpha)
             alpha->parent = upper;
-        }
-        
-        upper->right.reset();
-        upper->right = alpha;
 
-        lower->left.reset();
         lower->left = upper;
-
-        lower->parent.reset();
         lower->parent = upper->parent;
 
-        upper->parent.reset();
+        upper->right = alpha;
         upper->parent = lower;
+
+        // Reassigning the original upper's parent's child node so that everything is directed properly
+        if (lower->parent)
+        {
+            if (lower->getID() < lower->parent->getID())
+                lower->parent->left = lower;
+            else
+                lower->parent->right = lower;
+        }
+        else
+        {
+            this->root = lower;
+        }
 
         lower->setBF(0);
         upper->setBF(0);
@@ -250,30 +261,74 @@ struct AVLTree
     void rotateRightLeft(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
     {
         std::shared_ptr<Node> alpha = lower->left;
-        alpha->parent.reset();
+
+        // Shared pointers automatically reset on reassignment!!!
         alpha->parent = upper->parent;
+        alpha->left = upper;
+        alpha->right = lower;
 
-        upper->parent.reset();
         upper->parent = alpha;
-
-        lower->parent.reset();
         lower->parent = alpha;
 
-        upper->right.reset();
         upper->right = alpha->left;
-
-        lower->left.reset();
         lower->left = alpha->right;
 
-        alpha->left.reset();
-        alpha->left = upper;
-
-        alpha->right.reset();
-        alpha->right = lower;
+        // Reassigning the original upper's parent's child node so that everything is directed properly
+        if (alpha->parent)
+        {
+            if (alpha->getID() < alpha->parent->getID())
+            {
+                alpha->parent->left = alpha;
+            }
+            else
+            {
+                alpha->parent->right = alpha;
+            }
+        }
+        else
+        {
+            this->root = alpha;
+        }
 
         alpha->setBF(0);
         upper->setBF(0);
         lower->setBF(0);
+    }
+    
+    void rotateLeftRight(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
+    {
+        std::shared_ptr<Node> beta = lower->right;
+
+        beta->parent = upper->parent;
+        beta->left = lower;
+        beta->right = upper;
+
+        lower->right = beta->left;
+        upper->left = beta->right;
+
+        lower->parent = beta;
+        upper->parent = beta;
+       
+        // Reassigning the original upper's parent's child node so that everything is directed properly
+        if (beta->parent)
+        {
+            if (beta->getID() < beta->parent->getID())
+            {
+                beta->parent->left = beta;
+            }
+            else
+            {
+                beta->parent->right = beta;
+            }
+        }
+        else
+        {
+            this->root = beta;
+        }
+
+        beta->setBF(0);
+        lower->setBF(0);
+        upper->setBF(0);
     }
     void retraceInsert(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
     {
@@ -319,8 +374,8 @@ struct AVLTree
             else
             {
                 rotateRight(lower, lower->left);
-                if(lower->left ==nullptr)
-                    std::cout<<"LOWER->LEFT IS NULL";
+                // if(lower->left ==nullptr)
+                //     std::cout<<"LOWER->LEFT IS NULL";
                 rotateLeft(upper, lower->right);
             }
         }
@@ -328,7 +383,7 @@ struct AVLTree
         // If the BF is +-1, then we need to keep retracing
         else if (upper->getBF() == 1 || upper->getBF() == -1)
         {
-            if(upper->parent == nullptr)
+            if (upper->parent == nullptr)
                 return;
             else
                 return retraceInsert(upper->parent, upper);
@@ -423,7 +478,7 @@ struct AVLTree
     {
         std::string printString = printPreOrder(this->root);
 
-        printString.erase(printString.length() - 2, 2);
+        //printString.erase(printString.length() - 2, 2);
         return printString;
     }
 
@@ -439,14 +494,9 @@ struct AVLTree
         {
             return "";
         }
-        else if (current->left == nullptr && current->right == nullptr)
-        {
-            return current->getName();
-        }
-        else
-        {
-            return current->getName() + ", " + printPreOrder(current->left) + ", " + printPreOrder(current->right);
-        }
+
+        // From Professor's slides
+        return printPreOrder(current->left);
     }
 
     /**

@@ -7,17 +7,11 @@
 
 int main(){
     AVLTree avl = AVLTree();
-    avl.insert("M", 6);
-    avl.insert("N", 7);
-    avl.insert("O", 8);
-    avl.insert("L", 5);
-    avl.insert("K", 4);
-    avl.insert("Q", 10);
-    avl.insert("P", 9);
-    avl.insert("H", 2);
-    avl.insert("I", 3);
-    avl.insert("A", 1);
 
-    bool test = ("N, I, H, A, L, K, M, P, O, Q" == avl.printPreOrder());
+    avl.insert("1", 1);
+    avl.insert("2", 2);
+    avl.insert("3", 3);
+
+    std::string s = avl.printPreOrder();
 }
 

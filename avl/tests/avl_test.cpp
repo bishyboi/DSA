@@ -54,46 +54,60 @@ TEST(Basic, InsertionFalse)
     EXPECT_EQ(false, avl.insert("fatima", 3)); 
 }
 
-TEST(Basic, InOrderTraversalPrint)
+TEST(Rotations, SimpleLeft)
 {
-    AVLTree avl = AVLTree("aubergine", 0);
-    avl.insert("cat stevens", 2);
-    avl.insert("barry allen", 1);
-    avl.insert("the flash", 6);
-    avl.insert("kal-el", 4);
-    avl.insert("clark kent", 3);
-    avl.insert("superman", 5);
+    AVLTree avl = AVLTree();
 
-    EXPECT_EQ("aubergine, barry allen, cat stevens, clark kent, kal-el, superman, the flash", avl.printInOrder());
+    avl.insert("1", 1);
+    avl.insert("2", 2);
+    avl.insert("3", 3);
+
+    std::string s = avl.printPreOrder();
+
+    EXPECT_EQ("2, 1, 3", s);
 }
 
-TEST(BST_NOT_BALANCED, PreOrderTraversalPrint)
+TEST(Rotations, SimpleLeftRight)
 {
-    AVLTree avl = AVLTree("aubergine", 0);
-    avl.insert("cat stevens", 2);
-    avl.insert("barry allen", 1);
-    avl.insert("the flash", 6);
-    avl.insert("kal-el", 4);
-    avl.insert("clark kent", 3);
-    avl.insert("superman", 5);
+    AVLTree avl = AVLTree();
 
-    EXPECT_EQ("aubergine, cat stevens, barry allen, the flash, kal-el, clark kent, superman", avl.printPreOrder());
+    avl.insert("3", 3);
+    avl.insert("1", 1);
+    avl.insert("2", 2);
+
+    std::string s = avl.printPreOrder();
+
+    EXPECT_EQ("2, 1, 3", s);
 }
 
-TEST(BST_NOT_BALANCED, PostOrderTraversalPrint)
+TEST(Rotations, SimpleRight)
 {
-    AVLTree avl = AVLTree("aubergine", 0);
-    avl.insert("cat stevens", 2);
-    avl.insert("barry allen", 1);
-    avl.insert("the flash", 6);
-    avl.insert("kal-el", 4);
-    avl.insert("clark kent", 3);
-    avl.insert("superman", 5);
+    AVLTree avl = AVLTree();
 
-    EXPECT_EQ("barry allen, clark kent, superman, kal-el, the flash, cat stevens, aubergine", avl.printPostOrder());
+    avl.insert("3", 3);
+    avl.insert("2", 2);
+    avl.insert("1", 1);
+
+    std::string s = avl.printPreOrder();
+
+    EXPECT_EQ("2, 1, 3", s);
 }
 
-TEST(BST, AllRotAndPreOrder)
+
+TEST(Rotations, SimpleRightLeft)
+{
+    AVLTree avl = AVLTree();
+
+    avl.insert("1", 1);
+    avl.insert("3", 3);
+    avl.insert("2", 2);
+
+    std::string s = avl.printPreOrder();
+
+    EXPECT_EQ("2, 1, 3", s);
+}
+
+TEST(Overall, AllRotAndPreOrder)
 {
     AVLTree avl = AVLTree();
     avl.insert("M", 6);
@@ -110,7 +124,7 @@ TEST(BST, AllRotAndPreOrder)
     EXPECT_EQ("N, I, H, A, L, K, M, P, O, Q", avl.printPreOrder());
 }
 
-TEST(BST, AllRotAndPostOrder)
+TEST(Overall, AllRotAndPostOrder)
 {
     AVLTree avl = AVLTree();
     avl.insert("M", 6);
