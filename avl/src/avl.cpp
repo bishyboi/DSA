@@ -9,8 +9,8 @@ int main(){
     AVLTree avl = AVLTree();
 
     avl.insert("1", 1);
-    avl.insert("2", 2);
     avl.insert("3", 3);
+    avl.insert("2", 2);
 
     std::string s = avl.printPreOrder();
 

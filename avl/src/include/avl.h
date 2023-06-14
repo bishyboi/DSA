@@ -135,8 +135,8 @@ struct AVLTree
         }
 
         std::shared_ptr current = this->root;
-
-        return insertOnNode(current, insertion);
+        std::shared_ptr insert = insertion;
+        return insertOnNode(current, insert);
     }
 
     /**
@@ -331,11 +331,11 @@ struct AVLTree
     void retraceInsert(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
     {
         // CHeck if the last ancestor (or the root) has been updated
-        // if (upper == nullptr)
-        //     return;
+        if (upper == nullptr)
+            return;
 
         // Adjust the balance factor based on which side the subtree is on
-        if (lower == upper->left)
+        if (lower.get() == upper->left.get())
         {
             upper->addBF(1);
         }
@@ -476,7 +476,7 @@ struct AVLTree
     {
         std::string printString = printPreOrder(this->root);
 
-        printString.erase(printString.length()-2, 1);
+        printString.erase(printString.length()-2, 2);
         return printString;
     }
 
@@ -498,8 +498,6 @@ struct AVLTree
         {
             return "";
         }
-        // // From Professor's slides
-        // return current->getName() + printPreOrder(current->left);
     }
 
     /**
@@ -511,7 +509,7 @@ struct AVLTree
     {
         std::string printString = printPostOrder(this->root);
 
-        printString.erase(0, 2);
+        printString.erase(0, 1);
         return printString;
     }
 
@@ -523,17 +521,15 @@ struct AVLTree
      */
     std::string printPostOrder(std::shared_ptr<Node> current)
     {
-        if (current == nullptr)
+        if (current)
         {
-            return "";
-        }
-        else if (current->left == nullptr && current->right == nullptr)
-        {
-            return current->getName();
+            std::shared_ptr<Node> left = current->left;
+            std::shared_ptr<Node> right = current->right;
+            return printPostOrder(left) + printPostOrder(right) + ", "+ current->getName();
         }
         else
         {
-            return printPostOrder(current->left) + ", " + printPostOrder(current->right) + ", " + current->getName();
+            return "";
         }
     }
 
