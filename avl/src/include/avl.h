@@ -199,6 +199,7 @@ struct AVLTree
 
         lower->right.reset();
         beta->parent.reset();
+        upper->left.reset();
 
         upper->left = beta;
         beta->parent = upper;
@@ -212,9 +213,11 @@ struct AVLTree
     {
         std::shared_ptr<Node> alpha = lower->left;
 
+        //FIXME: SegFault when these are nullptrs, just add checks for nullptrs and this *should* be fixed
         lower->left.reset();
         alpha->parent.reset();
-
+        upper->right.reset();
+        // error on reassignment of shared pointer
         upper->right = alpha;
         alpha->parent = upper;
         lower->left = upper;
@@ -226,8 +229,8 @@ struct AVLTree
     void retraceInsert(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
     {
         // CHeck if the last ancestor (or the root) has been updated
-        if (upper == nullptr)
-            return;
+        // if (upper == nullptr)
+        //     return;
 
         // Adjust the balance factor based on which side the subtree is on
         if (lower == upper->left)
@@ -274,7 +277,10 @@ struct AVLTree
         // If the BF is +-1, then we need to keep retracing
         else if (upper->getBF() == 1 || upper->getBF() == -1)
         {
-            return retraceInsert(upper->parent, upper);
+            if(upper->parent == nullptr)
+                return;
+            else
+                return retraceInsert(upper->parent, upper);
         }
     }
     /**
