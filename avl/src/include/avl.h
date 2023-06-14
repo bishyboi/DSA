@@ -197,13 +197,23 @@ struct AVLTree
     {
         std::shared_ptr<Node> beta = lower->right;
 
-        lower->right.reset();
-        beta->parent.reset();
-        upper->left.reset();
+        if(beta)
+        {
+            beta->parent.reset();
+            beta->parent = upper;
+        }
 
+        upper->left.reset();
         upper->left = beta;
-        beta->parent = upper;
+        
+        lower->right.reset();
         lower->right = upper;
+
+        lower->parent.reset();
+        lower->parent = upper->parent;
+        
+        upper->parent.reset();
+        upper->parent = lower;
 
         lower->setBF(0);
         upper->setBF(0);
@@ -214,18 +224,57 @@ struct AVLTree
         std::shared_ptr<Node> alpha = lower->left;
 
         //FIXME: SegFault when these are nullptrs, just add checks for nullptrs and this *should* be fixed
-        lower->left.reset();
-        alpha->parent.reset();
+        
+        if(alpha)
+        {
+            alpha->parent.reset();
+            alpha->parent = upper;
+        }
+        
         upper->right.reset();
-        // error on reassignment of shared pointer
         upper->right = alpha;
-        alpha->parent = upper;
+
+        lower->left.reset();
         lower->left = upper;
+
+        lower->parent.reset();
+        lower->parent = upper->parent;
+
+        upper->parent.reset();
+        upper->parent = lower;
 
         lower->setBF(0);
         upper->setBF(0);
     }
 
+    void rotateRightLeft(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
+    {
+        std::shared_ptr<Node> alpha = lower->left;
+        alpha->parent.reset();
+        alpha->parent = upper->parent;
+
+        upper->parent.reset();
+        upper->parent = alpha;
+
+        lower->parent.reset();
+        lower->parent = alpha;
+
+        upper->right.reset();
+        upper->right = alpha->left;
+
+        lower->left.reset();
+        lower->left = alpha->right;
+
+        alpha->left.reset();
+        alpha->left = upper;
+
+        alpha->right.reset();
+        alpha->right = lower;
+
+        alpha->setBF(0);
+        upper->setBF(0);
+        lower->setBF(0);
+    }
     void retraceInsert(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
     {
         // CHeck if the last ancestor (or the root) has been updated
@@ -258,7 +307,7 @@ struct AVLTree
             else
             {
                 rotateLeft(lower, lower->right);
-                rotateRight(upper, lower->right);
+                rotateRight(upper, lower->left);
             }
         }
         else if (upper->getBF() == -2)
@@ -270,7 +319,9 @@ struct AVLTree
             else
             {
                 rotateRight(lower, lower->left);
-                rotateLeft(upper, lower->left);
+                if(lower->left ==nullptr)
+                    std::cout<<"LOWER->LEFT IS NULL";
+                rotateLeft(upper, lower->right);
             }
         }
 
