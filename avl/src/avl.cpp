@@ -13,5 +13,7 @@ int main(){
     avl.insert("3", 3);
 
     std::string s = avl.printPreOrder();
+
+    std::cout<< s;
 }
 

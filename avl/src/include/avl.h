@@ -155,7 +155,7 @@ struct AVLTree
         }
         else if (insertion->getID() > current->getID())
         {
-            if (current->right != nullptr)
+            if (current->right)
             {
                 return insertOnNode(current->right, insertion);
             }
@@ -171,7 +171,7 @@ struct AVLTree
         }
         else
         {
-            if (current->left != nullptr)
+            if (current->left)
             {
                 return insertOnNode(current->left, insertion);
             }
@@ -229,8 +229,6 @@ struct AVLTree
     void rotateLeft(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
     {
         std::shared_ptr<Node> alpha = lower->left;
-
-        // FIXME: SegFault when these are nullptrs, just add checks for nullptrs and this *should* be fixed
 
         if (alpha)
             alpha->parent = upper;
@@ -478,7 +476,7 @@ struct AVLTree
     {
         std::string printString = printPreOrder(this->root);
 
-        //printString.erase(printString.length() - 2, 2);
+        printString.erase(printString.length()-2, 1);
         return printString;
     }
 
@@ -490,13 +488,18 @@ struct AVLTree
      */
     std::string printPreOrder(std::shared_ptr<Node> current)
     {
-        if (current == nullptr)
+        if (current)
+        {
+            std::shared_ptr<Node> left = current->left;
+            std::shared_ptr<Node> right = current->right;
+            return current->getName() +", " + printPreOrder(left) + printPreOrder(right);
+        }
+        else
         {
             return "";
         }
-
-        // From Professor's slides
-        return printPreOrder(current->left);
+        // // From Professor's slides
+        // return current->getName() + printPreOrder(current->left);
     }
 
     /**
