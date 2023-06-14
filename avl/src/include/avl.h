@@ -22,7 +22,7 @@ struct AVLTree
 
         std::unique_ptr<std::string> name;
         std::unique_ptr<int> gator_id;
-        std::unique_ptr<int> balance_factor = 0;
+        std::unique_ptr<int> balance_factor = std::make_unique<int>(0);
 
         Node(const std::string name, const int id, std::shared_ptr<Node> p = nullptr,
              std::shared_ptr<Node> l = nullptr, std::shared_ptr<Node> r = nullptr)
@@ -68,9 +68,8 @@ struct AVLTree
 
         void addBF(int x)
         {
-            *(this->balance_factor) += x;
+            *(this->balance_factor) = this->getBF() + x;
         }
-
     };
 
     std::shared_ptr<Node> root = nullptr;
@@ -162,10 +161,10 @@ struct AVLTree
             }
             else
             {
-                current->right = std::move(insertion);
+                current->right = insertion;
                 current->right->parent = current;
 
-                retraceInsert(current->right);
+                retraceInsert(current, current->right);
 
                 return true;
             }
@@ -178,10 +177,10 @@ struct AVLTree
             }
             else
             {
-                current->left = std::move(insertion);
+                current->left = insertion;
                 current->left->parent = current;
 
-                retraceInsert(current->left);
+                retraceInsert(current, current->left);
 
                 return true;
             }
@@ -224,32 +223,58 @@ struct AVLTree
         upper->setBF(0);
     }
 
-    void retraceInsert(std::shared_ptr<Node> leaf)
+    void retraceInsert(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
     {
         // CHeck if the last ancestor (or the root) has been updated
-        if (leaf == nullptr)
+        if (upper == nullptr)
             return;
 
-        // FIXME: Throws errors on root node since root->parent == nullptr
-        // Maybe i should start from a node and check its children? that retrace would prevent an error on nullptr
-        // then i could accidentally rotate on a nullptr
-        // its probably best for me to just code an edge case for root nodes
-
-        if (leaf->parent->left == leaf)
-            leaf->parent->addBF(1);
+        // Adjust the balance factor based on which side the subtree is on
+        if (lower == upper->left)
+        {
+            upper->addBF(1);
+        }
         else
-            leaf->parent->addBF(-1);
+        {
+            upper->addBF(-1);
+        }
 
-
-        if (leaf->parent->getBF() == 0)
+        // If the BF after insertion is 0 at any node, then the height has remained the same
+        if (upper->getBF() == 0)
         {
             return;
+        }
 
-        } else if (leaf->parent->getBF() == -1 || leaf->parent->getBF() ==1) {
-            retraceInsert(leaf->parent);
-        } else{
+        // If the BF is +- 2, then a rotation is needed
+        else if (upper->getBF() == 2)
+        {
+            if (lower->getBF() == 1)
+            {
+                rotateRight(upper, lower);
+            }
+            else
+            {
+                rotateLeft(lower, lower->right);
+                rotateRight(upper, lower->right);
+            }
+        }
+        else if (upper->getBF() == -2)
+        {
+            if (lower->getBF() == -1)
+            {
+                rotateLeft(upper, lower);
+            }
+            else
+            {
+                rotateRight(lower, lower->left);
+                rotateLeft(upper, lower->left);
+            }
+        }
 
-            if(leaf->parent)
+        // If the BF is +-1, then we need to keep retracing
+        else if (upper->getBF() == 1 || upper->getBF() == -1)
+        {
+            return retraceInsert(upper->parent, upper);
         }
     }
     /**
