@@ -430,15 +430,27 @@ struct AVLTree
         }
         else
         {
-            // FIXME: EDGE CASES ON ROOT NODES
             // Case 1: Search is a leaf node
             if (!(search->right || search->left))
             {
                 // Edge case on root node
-                if(search.get() != this->root.get())
+                if (search.get() != this->root.get())
+                {
                     search->parent.reset();
+                    
+                    if (search.get() == search->parent->right.get())
+                    {
+                        search->parent->right.reset();
+                    }
+                    else
+                    {
+                        search->parent->left.reset();
+                    }
+                }
                 else
+                {
                     this->root.reset();
+                } 
                 // The parent should be the only pointer on the node, with shared_ptr calling destructor
                 // after this method falls out of scope
                 return;
@@ -450,7 +462,7 @@ struct AVLTree
                 if (search->left)
                 {
                     // Edge case on root node
-                    if(search.get() != this->root.get())
+                    if (search.get() != this->root.get())
                     {
                         // If search is the right child of its parent
                         if (search.get() == search->parent->right.get())
@@ -465,7 +477,7 @@ struct AVLTree
                 }
                 else
                 {
-                    if(search.get() != this->root.get())
+                    if (search.get() != this->root.get())
                     {
                         // If search is the right child of its parent
                         if (search.get() == search->parent->right.get())
@@ -486,15 +498,43 @@ struct AVLTree
                 // We need to find the in-order successor, so we go right once, then left as much as possible
                 std::shared_ptr<Node> replacement = search->right;
 
-                while(replacement->left)
+                while (replacement->left)
                     replacement = replacement->left;
 
-                // The successor may have a right child
-                
-                
+                // Moving replacement to the search nodes position
+                if (search.get() == this->root.get())
+                    this->root = replacement;
 
+                if (replacement->right)
+                {
+                    if (replacement.get() == replacement->parent->right.get())
+                }
+
+                else
+                {
+                    if (search.get() == search->parent->right.get())
+                        search->parent->right = replacement;
+                    else
+                        search->parent->left = replacement;
+                }
+
+                // Rearranging replacement's children
             }
         }
+    }
+
+    /**
+     * @brief
+     * Remove the Nth GatorID from the in-order traversal of the tree (N = 0 for the first item, etc).
+     * If removal is successful, print “successful”.
+     * [Optional: Balance the tree automatically if necessary.
+     * We will test your code only on cases where the tree will be balanced before and after the deletion.
+     * So you can implement a BST deletion and still get full credit]
+     * If the Nth GatorID does not exist within the tree, print “unsuccessful”.
+     * @param n Nth Gator-ID from the IN-ORDER traversal
+     */
+    void removeInOrder(const int n)
+    {
     }
 
     /**
@@ -656,19 +696,5 @@ struct AVLTree
             return height_L;
         else
             return height_R;
-    }
-
-    /**
-     * @brief
-     * Remove the Nth GatorID from the in-order traversal of the tree (N = 0 for the first item, etc).
-     * If removal is successful, print “successful”.
-     * [Optional: Balance the tree automatically if necessary.
-     * We will test your code only on cases where the tree will be balanced before and after the deletion.
-     * So you can implement a BST deletion and still get full credit]
-     * If the Nth GatorID does not exist within the tree, print “unsuccessful”.
-     * @param n Nth Gator-ID from the IN-ORDER traversal
-     */
-    void removeInOrder(const int n)
-    {
     }
 };
