@@ -507,6 +507,7 @@ struct AVLTree
                 return;
             }
             // Case 3: Search has two children
+            // FIXME: Fix this shit
             else
             {
                 // We need to find the in-order successor, so we go right once, then left as much as possible
@@ -515,24 +516,46 @@ struct AVLTree
                 while (replacement->left)
                     replacement = replacement->left;
 
-                // Moving replacement to the search nodes position
-                if (search.get() == this->root.get())
-                    this->root = replacement;
 
-                if (replacement->right)
+                if (replacement->parent.get() != search.get())
+                // Case: Replacement node is not a child of Search
                 {
-                    if (replacement.get() == replacement->parent->right.get())
-                }
+                    // Managing replacement's right child (it can only be a right child)
 
-                else
-                {
-                    if (search.get() == search->parent->right.get())
-                        search->parent->right = replacement;
+                    // If replacement right is null, then replacement parent's left child will go to null too
+                    replacement->parent->left = replacement->right; 
+                    
+                    if (replacement->right) // Replacement must be a left child
+                        replacement->right->parent = replacement->parent;
+
+                    // TODO: search parent implementation for root nodes/regular
+                    if (search.get() == this->root.get())
+                    {
+                        this->root = replacement;
+                        replacement->left = search->left;
+                        replacement->right = search->right;
+                        
+                        if(replacement->left)
+                            replacement->left->parent = replacement;
+
+                        if(replacement->right)
+                            replacement->right->parent = replacement;
+                    }
                     else
-                        search->parent->left = replacement;
-                }
+                    // Case: Search is not a root node
+                    {
+                        
+                        replacement->parent = search->parent;
 
-                // Rearranging replacement's children
+                        if(search.get() == search->parent->right.get())
+                            search->parent->right = replacement;
+                        else
+                            search->parent->left  = replacement;
+                    }
+                }
+                else
+                // Case: Replacement node is child of Search node
+
             }
         }
     }
