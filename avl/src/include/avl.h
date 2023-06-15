@@ -296,10 +296,10 @@ struct AVLTree
         upper->setBF(0);
         lower->setBF(0);
     }
-    
+
     void rotateLeftRight(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
     {
-        std::cout<< "peanuts";
+        std::cout << "peanuts";
         std::shared_ptr<Node> beta = lower->right;
         std::shared_ptr<Node> beta_l = beta->left;
         std::shared_ptr<Node> beta_r = beta->right;
@@ -313,7 +313,7 @@ struct AVLTree
 
         lower->parent = beta;
         upper->parent = beta;
-       
+
         // Reassigning the original upper's parent's child node so that everything is directed properly
         if (beta->parent)
         {
@@ -398,12 +398,103 @@ struct AVLTree
      * So you can implement a BST deletion and still get full credit]
      * If deletion is successful, print “successful”.
      * If the ID does not exist within the tree, print “unsuccessful”.
-     * You must prioritize replacing a removed node with its in-order successor for the case where the deleted node has two children.
+     * You must prioritize replacing a removed node with its in-order successor for the case where
+     * the deleted node has two children.
      * @param id Unique 8-Digit ID number
      */
     void remove(const int id)
     {
-        // TODO: implement
+        std::shared_ptr<Node> search = this->root;
+
+        // Step 1: Find the node to be removed (search)
+
+        // Short-Circuit abusers (should avoid the getID() nullptr error by short-circuiting)
+        while (search != nullptr || search->getID() != id)
+        {
+            if (search->getID() > id)
+            {
+                search = search->left;
+            }
+            else
+            {
+                search = search->right;
+            }
+        }
+
+        // Step 2: Find search node's replacement
+
+        // Check if the node actually exists
+        if (!search)
+        {
+            return;
+        }
+        else
+        {
+            // FIXME: EDGE CASES ON ROOT NODES
+            // Case 1: Search is a leaf node
+            if (!(search->right || search->left))
+            {
+                // Edge case on root node
+                if(search.get() != this->root.get())
+                    search->parent.reset();
+                else
+                    this->root.reset();
+                // The parent should be the only pointer on the node, with shared_ptr calling destructor
+                // after this method falls out of scope
+                return;
+            }
+            // Case 2: Search has only one child
+            else if (!search->left || !search->right)
+            {
+                // Replace this node with its one child
+                if (search->left)
+                {
+                    // Edge case on root node
+                    if(search.get() != this->root.get())
+                    {
+                        // If search is the right child of its parent
+                        if (search.get() == search->parent->right.get())
+                            search->parent->right = search->left;
+                        else
+                            search->parent->left = search->left;
+                    }
+                    else
+                    {
+                        this->root = search->left;
+                    }
+                }
+                else
+                {
+                    if(search.get() != this->root.get())
+                    {
+                        // If search is the right child of its parent
+                        if (search.get() == search->parent->right.get())
+                            search->parent->right = search->right;
+                        else
+                            search->parent->left = search->right;
+                    }
+                    else
+                    {
+                        this->root = search->right;
+                    }
+                }
+                return;
+            }
+            // Case 3: Search has two children
+            else
+            {
+                // We need to find the in-order successor, so we go right once, then left as much as possible
+                std::shared_ptr<Node> replacement = search->right;
+
+                while(replacement->left)
+                    replacement = replacement->left;
+
+                // The successor may have a right child
+                
+                
+
+            }
+        }
     }
 
     /**
@@ -413,7 +504,7 @@ struct AVLTree
      * If the ID does not exist within the tree, print “unsuccessful”.
      * @param id Unique 8-Digit ID number
      */
-    void search(const int id)
+    std::string search(const int id)
     {
         // TODO: implement
     }
@@ -429,7 +520,7 @@ struct AVLTree
      *
      * @param name Name of the student(s)
      */
-    void search(const std::string name)
+    std::string search(const std::string name)
     {
         // TODO: implement
     }
@@ -479,7 +570,7 @@ struct AVLTree
     {
         std::string printString = printPreOrder(this->root);
 
-        printString.erase(printString.length()-2, 2);
+        printString.erase(printString.length() - 2, 2);
         return printString;
     }
 
@@ -495,7 +586,7 @@ struct AVLTree
         {
             std::shared_ptr<Node> left = current->left;
             std::shared_ptr<Node> right = current->right;
-            return current->getName() +", " + printPreOrder(left) + printPreOrder(right);
+            return current->getName() + ", " + printPreOrder(left) + printPreOrder(right);
         }
         else
         {
@@ -528,7 +619,7 @@ struct AVLTree
         {
             std::shared_ptr<Node> left = current->left;
             std::shared_ptr<Node> right = current->right;
-            return printPostOrder(left) + printPostOrder(right) + ", "+ current->getName();
+            return printPostOrder(left) + printPostOrder(right) + ", " + current->getName();
         }
         else
         {
@@ -541,13 +632,8 @@ struct AVLTree
      * Prints the number of levels that exist in the tree.
      * Prints 0 if the head of the tree is null. For example, the tree in Fig. 1 has 4 levels.
      * AKA: Find max height of tree
+     * @return int with the height of the tree
      */
-    void printLevelCount()
-    {
-        
-    }
-
-
     int getHeight()
     {
         return getHeight(this->root);
@@ -560,13 +646,13 @@ struct AVLTree
             return 0;
         }
 
-        std::shared_ptr<Node> left  = current->left;
+        std::shared_ptr<Node> left = current->left;
         std::shared_ptr<Node> right = current->right;
 
         int height_L = 1 + getHeight(left);
         int height_R = 1 + getHeight(right);
 
-        if(height_L> height_R)
+        if (height_L > height_R)
             return height_L;
         else
             return height_R;

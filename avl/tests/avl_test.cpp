@@ -141,6 +141,36 @@ TEST(Overall, AllRotAndPostOrder)
     EXPECT_EQ("A, H, K, M, L, I, O, Q, P, N", avl.printPostOrder());
 }
 
+TEST(Auxillary, getHeight1)
+{
+    AVLTree avl = AVLTree();
+    avl.insert("M", 6);
+    avl.insert("N", 7);
+    avl.insert("O", 8);
+    avl.insert("L", 5);
+    avl.insert("K", 4);
+    avl.insert("Q", 10);
+    avl.insert("P", 9);
+    avl.insert("H", 2);
+    avl.insert("I", 3);
+    avl.insert("A", 1);
+
+    EXPECT_EQ(4, avl.getHeight());  
+}
+
+TEST(Auxillary, getHeight2)
+{
+        AVLTree avl = AVLTree();
+    avl.insert("1", 1);
+    avl.insert("7", 7);
+    avl.insert("3", 3);
+    avl.insert("5", 5);
+    avl.insert("9", 9);
+
+    EXPECT_EQ("3, 1, 7, 5, 9", avl.printPreOrder());
+    EXPECT_EQ(3, avl.getHeight());
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
