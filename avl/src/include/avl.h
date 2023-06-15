@@ -433,11 +433,10 @@ struct AVLTree
             // Case 1: Search is a leaf node
             if (!(search->right || search->left))
             {
-                // Edge case on root node
                 if (search.get() != this->root.get())
                 {
                     search->parent.reset();
-                    
+
                     if (search.get() == search->parent->right.get())
                     {
                         search->parent->right.reset();
@@ -449,6 +448,7 @@ struct AVLTree
                 }
                 else
                 {
+                    // If it's the root node, and only node in tree, then we can just delete the root
                     this->root.reset();
                 } 
                 // The parent should be the only pointer on the node, with shared_ptr calling destructor
@@ -460,15 +460,22 @@ struct AVLTree
             {
                 // Replace this node with its one child
                 if (search->left)
+                // Case: Search has only a left child
                 {
                     // Edge case on root node
                     if (search.get() != this->root.get())
                     {
                         // If search is the right child of its parent
                         if (search.get() == search->parent->right.get())
+                        {
                             search->parent->right = search->left;
+                            search->left->parent = search->parent;
+                        }
                         else
+                        {
                             search->parent->left = search->left;
+                            search->left->parent = search->parent;
+                        }
                     }
                     else
                     {
@@ -476,14 +483,21 @@ struct AVLTree
                     }
                 }
                 else
+                // Case: Search has only a right child
                 {
                     if (search.get() != this->root.get())
                     {
                         // If search is the right child of its parent
                         if (search.get() == search->parent->right.get())
+                        {
                             search->parent->right = search->right;
+                            search->right->parent = search->parent;
+                        }
                         else
+                        {
                             search->parent->left = search->right;
+                            search->right->parent = search->parent;
+                        }
                     }
                     else
                     {
