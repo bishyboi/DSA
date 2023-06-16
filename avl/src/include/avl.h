@@ -424,13 +424,9 @@ struct AVLTree
         // Step 2: Find search node's replacement
 
         // Check if the node actually exists
-        if (!search)
+        if (search)
         {
-            return;
-        }
-        else
-        {
-            // Case 1: Search is a leaf node
+            //** Case 1: Search is a leaf node
             if (!(search->right || search->left))
             {
                 if (search.get() != this->root.get())
@@ -450,17 +446,18 @@ struct AVLTree
                 {
                     // If it's the root node, and only node in tree, then we can just delete the root
                     this->root.reset();
-                } 
+                }
                 // The parent should be the only pointer on the node, with shared_ptr calling destructor
                 // after this method falls out of scope
-                return;
+
+                //TODO: Rebalance after deletion
             }
-            // Case 2: Search has only one child
+            //** Case 2: Search has only one child
             else if (!search->left || !search->right)
             {
                 // Replace this node with its one child
-                if (search->left)
                 // Case: Search has only a left child
+                if (search->left)
                 {
                     // Edge case on root node
                     if (search.get() != this->root.get())
@@ -468,18 +465,44 @@ struct AVLTree
                         // If search is the right child of its parent
                         if (search.get() == search->parent->right.get())
                         {
-                            search->parent->right = search->left;
-                            search->left->parent = search->parent;
+                            if (search->left)
+                            {
+                                search->parent->right = search->left;
+                                search->left->parent = search->parent;
+                            }
+                            else
+                            {
+                                search->parent->right = search->right;
+                                search->right->parent = search->parent;
+                            }
                         }
                         else
                         {
-                            search->parent->left = search->left;
-                            search->left->parent = search->parent;
+                            if (search->left)
+                            {
+                                search->parent->left = search->left;
+                                search->left->parent = search->parent;
+                            }
+                            else
+                            {
+                                search->parent->left = search->right;
+                                search->right->parent = search->parent;
+                            }
                         }
-                    }
+                    } 
+                    // Case: Search is a root node
                     else
                     {
-                        this->root = search->left;
+                        if (search->left)
+                        {
+                            this->root = search->left;
+                            search->left->parent.reset();
+                        }
+                        else
+                        {
+                            this->root = search->right;
+                            search->right->parent.reset();
+                        }
                     }
                 }
                 else
@@ -502,12 +525,13 @@ struct AVLTree
                     else
                     {
                         this->root = search->right;
+                        search->right->parent.reset();
                     }
                 }
-                return;
+
+                //TODO: Rebalance after deletion
             }
-            // Case 3: Search has two children
-            // FIXME: Fix this shit
+            //** Case 3: Search has two children
             else
             {
                 // We need to find the in-order successor, so we go right once, then left as much as possible
@@ -515,47 +539,47 @@ struct AVLTree
 
                 while (replacement->left)
                     replacement = replacement->left;
+                
+                //**SWAP SEARCH AND REPLACEMENT
+                // Manage replacement's right child (it can only have a right child)
+                if( replacement.get() == replacement->parent->right.get())
+                    replacement->parent->right = replacement->right;
+                else
+                    replacement->parent->left = replacement->right;
+
+                if (replacement->right) // Replacement must be a left child
+                    replacement->right->parent = replacement->parent;
 
 
-                if (replacement->parent.get() != search.get())
-                // Case: Replacement node is not a child of Search
+                // Setting Replacement's new parent relationship
+                if (search.get() == this->root.get())
+                // Case: Search is the root node
                 {
-                    // Managing replacement's right child (it can only be a right child)
-
-                    // If replacement right is null, then replacement parent's left child will go to null too
-                    replacement->parent->left = replacement->right; 
-                    
-                    if (replacement->right) // Replacement must be a left child
-                        replacement->right->parent = replacement->parent;
-
-                    // TODO: search parent implementation for root nodes/regular
-                    if (search.get() == this->root.get())
-                    {
-                        this->root = replacement;
-                        replacement->left = search->left;
-                        replacement->right = search->right;
-                        
-                        if(replacement->left)
-                            replacement->left->parent = replacement;
-
-                        if(replacement->right)
-                            replacement->right->parent = replacement;
-                    }
-                    else
-                    // Case: Search is not a root node
-                    {
-                        
-                        replacement->parent = search->parent;
-
-                        if(search.get() == search->parent->right.get())
-                            search->parent->right = replacement;
-                        else
-                            search->parent->left  = replacement;
-                    }
+                    this->root = replacement;
+                    replacement->parent.reset();
                 }
                 else
-                // Case: Replacement node is child of Search node
+                // Case: Search is not the root node
+                {
+                    replacement->parent = search->parent;
 
+                    if (search.get() == search->parent->right.get())
+                        search->parent->right = replacement;
+                    else
+                        search->parent->left = replacement;
+                }
+
+                // Setting Replacement's child relationship
+                replacement->left = search->left;
+                replacement->right = search->right;
+
+                if (replacement->left)
+                    replacement->left->parent = replacement;
+
+                if (replacement->right)
+                    replacement->right->parent = replacement;
+
+                //TODO: Rebalance after deletion
             }
         }
     }
@@ -591,7 +615,7 @@ struct AVLTree
      * Search for the student with the specified name, NAME in the tree.
      * If the student name was found, print the associated ID.
      * If the tree has more than one object with the same NAME,
-     * thenprint each ID on a new line with no other spaces and in the same relative order as a pre-order traversal.
+     * then print each ID on a new line with no other spaces and in the same relative order as a pre-order traversal.
      * If the name does not exist within the tree, print “unsuccessful”.
      * NAME identifier will be surrounded by double quotes for parsing, e.g. "Josh Smith".
      *
@@ -674,7 +698,7 @@ struct AVLTree
     /**
      * @brief
      * Print out a comma separated post-order traversal of the names in the tree. LRN
-     * @return Stromg containing the list of students from a post-order traversal
+     * @return String containing the list of students from a post-order traversal
      */
     std::string printPostOrder()
     {
