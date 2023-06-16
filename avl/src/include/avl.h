@@ -405,6 +405,7 @@ struct AVLTree
      */
     bool remove(int id)
     {
+        std::cout << "HELP";
         std::shared_ptr<Node> search = this->root;
 
         // Step 1: Find the node to be removed (search)
@@ -445,6 +446,7 @@ struct AVLTree
                 {
                     // If it's the root node, and only node in tree, then we can just delete the root
                     this->root.reset();
+                    return true;
                 }
                 // The parent should be the only pointer on the node, with shared_ptr calling destructor
                 // after this method falls out of scope
@@ -557,7 +559,7 @@ struct AVLTree
                 if (replacement->right)
                     replacement->right->parent = replacement;
 
-                //TODO: Implement rebalancing on case Deg(Remove) = 2
+                // TODO: Implement rebalancing on case Deg(Remove) = 2
             }
 
             return true;
@@ -595,8 +597,40 @@ struct AVLTree
      * If the Nth GatorID does not exist within the tree, print “unsuccessful”.
      * @param n Nth Gator-ID from the IN-ORDER traversal
      */
-    void removeInOrder(int n)
+    bool removeInOrder(int n)
     {
+        std::shared_ptr<Node> current = this->root;
+
+        int removeID = removeInOrderSearch(current, n);
+
+        if (!removeID)
+            return false;
+        else
+            return remove(removeID);
+    }
+
+    void removeInOrderSearch(std::shared_ptr<Node> current, int n)
+    {
+        static int i = 0;
+
+        if (!current)
+            return;
+        
+        if (i <= n)
+        {
+            std::shared_ptr<Node> left = current->left;
+            std::shared_ptr<Node> right = current->right;
+
+            removeInOrderSearch(left, n);
+            i++;
+
+            if (i == n)
+                
+            
+            removeInOrderSearch(right, n);
+        }
+        else
+            return;
     }
 
     /**
@@ -640,8 +674,8 @@ struct AVLTree
     std::string inOrderSearch(std::string name)
     {
         std::string printString = inOrderSearch(this->root, name);
-        
-        if (printString =="")
+
+        if (printString == "")
             printString = "unsuccessful";
         else
             printString.erase(printString.length() - 2, 2);
@@ -657,9 +691,9 @@ struct AVLTree
             std::shared_ptr<Node> right = current->right;
 
             if (current->getName() == name)
-                return inOrderSearch(left, name) + std::to_string(current->getID()) + ", "+ inOrderSearch(right, name);
+                return inOrderSearch(left, name) + std::to_string(current->getID()) + ", " + inOrderSearch(right, name);
             else
-                return inOrderSearch(left, name) + inOrderSearch(right,name);
+                return inOrderSearch(left, name) + inOrderSearch(right, name);
         }
         else
         {
@@ -676,8 +710,12 @@ struct AVLTree
     {
         std::string printString = printInOrder(this->root);
 
-        printString.erase(0, 2);
-        printString.erase(printString.length() - 2, 2);
+        if (printString != "")
+        {
+            printString.erase(0, 2);
+            printString.erase(printString.length() - 2, 2);
+        }
+
         return printString;
     }
 
@@ -711,8 +749,9 @@ struct AVLTree
     std::string printPreOrder()
     {
         std::string printString = printPreOrder(this->root);
+        if (printString != "")
+            printString.erase(printString.length() - 2, 2);
 
-        printString.erase(printString.length() - 2, 2);
         return printString;
     }
 
@@ -745,7 +784,8 @@ struct AVLTree
     {
         std::string printString = printPostOrder(this->root);
 
-        printString.erase(0, 2);
+        if (printString != "")
+            printString.erase(0, 2);
         return printString;
     }
 

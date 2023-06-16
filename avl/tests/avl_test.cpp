@@ -210,6 +210,8 @@ TEST(Removal_Deg0, Root)
     avl.insert("barry allen", 35);
     avl.remove(35);
 
+    EXPECT_EQ("", avl.printPreOrder());
+
     avl.insert("2", 2);
 
     EXPECT_EQ("2", avl.printPreOrder());
@@ -442,7 +444,23 @@ TEST(Removal_Deg2, ROOT_IndirectChild_Child)
 }
 
 TEST(Removal_N, idkMan)
-{}
+{
+    AVLTree avl = AVLTree();
+    
+    avl.insert("10", 10);
+
+    avl.insert("5", 5);
+    avl.insert("15", 15);
+    
+    avl.insert("0", 0);
+    avl.insert("7", 7);
+    avl.insert("12", 12);
+    avl.insert("17", 17);
+
+    avl.removeInOrder(3);
+
+    EXPECT_EQ("10, 5, 0, 15, 12, 17", avl.printPreOrder());
+}
 
 TEST(Search, InOrderSearch_Successful)
 {
