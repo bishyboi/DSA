@@ -107,7 +107,7 @@ TEST(Rotations, SimpleRightLeft)
     EXPECT_EQ("2, 1, 3", s);
 }
 
-TEST(Overall, AllRotAndPreOrder)
+TEST(MultipleRots, AllRotAndPreOrder)
 {
     AVLTree avl = AVLTree();
     avl.insert("M", 6);
@@ -124,7 +124,7 @@ TEST(Overall, AllRotAndPreOrder)
     EXPECT_EQ("N, I, H, A, L, K, M, P, O, Q", avl.printPreOrder());
 }
 
-TEST(Overall, AllRotAndPostOrder)
+TEST(MultipleRots, AllRotAndPostOrder)
 {
     AVLTree avl = AVLTree();
     avl.insert("M", 6);
@@ -141,7 +141,7 @@ TEST(Overall, AllRotAndPostOrder)
     EXPECT_EQ("A, H, K, M, L, I, O, Q, P, N", avl.printPostOrder());
 }
 
-TEST(Auxillary, getHeight1)
+TEST(Height, getHeight1)
 {
     AVLTree avl = AVLTree();
     avl.insert("M", 6);
@@ -158,7 +158,7 @@ TEST(Auxillary, getHeight1)
     EXPECT_EQ(4, avl.getHeight());  
 }
 
-TEST(Auxillary, getHeight2)
+TEST(Height, getHeight2)
 {
     AVLTree avl = AVLTree();
     avl.insert("1", 1);
@@ -171,7 +171,7 @@ TEST(Auxillary, getHeight2)
     EXPECT_EQ(3, avl.getHeight());
 }
 
-TEST(Removal, Deg0_Leaf1)
+TEST(Removal_Deg0, Leaf1)
 {
     AVLTree avl = AVLTree();
     avl.insert("1", 1);
@@ -187,7 +187,7 @@ TEST(Removal, Deg0_Leaf1)
     EXPECT_EQ("4, 2, 1, 3, 6, 5", avl.printPreOrder());
 }
 
-TEST(Removal, Deg0_Leaf2)
+TEST(Removal_Deg0, Leaf2)
 {
     AVLTree avl = AVLTree();
     avl.insert("1", 1);
@@ -203,7 +203,7 @@ TEST(Removal, Deg0_Leaf2)
     EXPECT_EQ("4, 2, 1, 6, 5, 7", avl.printPreOrder());
 }
 
-TEST(Removal, Deg0_Root)
+TEST(Removal_Deg0, Root)
 {
     AVLTree avl = AVLTree("1", 1);
 
@@ -214,7 +214,59 @@ TEST(Removal, Deg0_Root)
     EXPECT_EQ("2", avl.printPreOrder());
 }
 
-TEST(Search, InOrderSearch)
+TEST(Removal_Deg1, LeftChild_NoChild)
+{}
+
+TEST(Removal_Deg1, ROOT_LeftChild_NoChild)
+{}
+
+TEST(Removal_Deg1, LeftChild_Child)
+{}
+
+TEST(Removal_Deg1, ROOT_LeftChild_Child)
+{}
+
+TEST(Removal_Deg1, RightChild_NoChild)
+{}
+
+TEST(Removal_Deg1, ROOT_RightChild_NoChild)
+{}
+
+TEST(Removal_Deg1, RightChild_Child)
+{}
+
+TEST(Removal_Deg1, ROOT_RightChild_Child)
+{}
+
+
+TEST(Removal_Deg2, DirectChild_NoChild)
+{}
+
+TEST(Removal_Deg2, ROOT_DirectChild_NoChild)
+{}
+
+TEST(Removal_Deg2, DirectChild_Child)
+{}
+
+TEST(Removal_Deg2, ROOT_DirectChild_Child)
+{}
+
+TEST(Removal_Deg2, IndirectChild_NoChild)
+{}
+
+TEST(Removal_Deg2, ROOT_IndirectChild_NoChild)
+{}
+
+TEST(Removal_Deg2, IndirectChild_Child)
+{}
+
+TEST(Removal_Deg2, ROOT_IndirectChild_Child)
+{}
+
+TEST(Removal_N, idkMan)
+{}
+
+TEST(Search, InOrderSearch_Successful)
 {
     AVLTree avl = AVLTree();
 
@@ -228,6 +280,51 @@ TEST(Search, InOrderSearch)
 
     EXPECT_EQ("2, 3, 4, 6", avl.inOrderSearch("seven"));
 }
+
+
+TEST(Search, InOrderSearch_UnSuccessful)
+{
+    AVLTree avl = AVLTree();
+
+    avl.insert("seen", 1);
+    avl.insert("seven", 2);
+    avl.insert("seven", 3);
+    avl.insert("seven", 4);
+    avl.insert("se7en", 5);
+    avl.insert("seven", 6);
+    avl.insert("sven", 7);
+
+    EXPECT_EQ("unsuccessful", avl.inOrderSearch("sixteen"));
+}
+
+TEST(Search, BasicSearch_Successful)
+{
+    AVLTree avl = AVLTree();
+
+    avl.insert("3", 3);
+    avl.insert("taquavion", 6969);
+    avl.insert("barry allen", 32);
+    avl.insert("superman", 555);
+    avl.insert("batman", 31);
+    avl.insert("bruce wayne", 68);
+
+    EXPECT_EQ("batman", avl.search(31));
+}
+
+TEST(Search, BasicSearch_UnSuccessful)
+{
+    AVLTree avl = AVLTree();
+
+    avl.insert("3", 3);
+    avl.insert("taquavion", 6969);
+    avl.insert("barry allen", 32);
+    avl.insert("superman", 555);
+    avl.insert("batman", 31);
+    avl.insert("bruce wayne", 68);
+
+    EXPECT_EQ("unsuccessful", avl.search(69));
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

@@ -403,12 +403,10 @@ struct AVLTree
      * the deleted node has two children.
      * @param id Unique 8-Digit ID number
      */
-    void remove(int id)
+    bool remove(int id)
     {
         std::shared_ptr<Node> search = this->root;
 
-        if(!search)
-            return;
         // Step 1: Find the node to be removed (search)
 
         // Short-Circuit abusers (should avoid the getID() nullptr error by short-circuiting)
@@ -561,7 +559,11 @@ struct AVLTree
 
                 //TODO: Implement rebalancing on case Deg(Remove) = 2
             }
+
+            return true;
         }
+        else
+            return false;
     }
 
     void retraceDelete(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
@@ -612,7 +614,7 @@ struct AVLTree
     std::string search(std::shared_ptr<Node> current, int id)
     {
         if (!current)
-            return "";
+            return "unsuccessful";
         else
         {
             if (current->getID() > id)
@@ -638,7 +640,12 @@ struct AVLTree
     std::string inOrderSearch(std::string name)
     {
         std::string printString = inOrderSearch(this->root, name);
-        printString.erase(printString.length() - 2, 2);
+        
+        if (printString =="")
+            printString = "unsuccessful";
+        else
+            printString.erase(printString.length() - 2, 2);
+
         return printString;
     }
 

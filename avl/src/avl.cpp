@@ -8,11 +8,14 @@
 int main(){
     AVLTree avl = AVLTree();
 
-    avl.insert("1", 1);
+    avl.insert("seen", 1);
+    avl.insert("seven", 2);
+    avl.insert("seven", 3);
+    avl.insert("seven", 4);
+    avl.insert("se7en", 5);
+    avl.insert("seven", 6);
+    avl.insert("sven", 7);
 
-    std::string s = avl.printPreOrder();
-    avl.remove(1);
-
-    avl.insert("2", 2);
+    avl.inOrderSearch("sixteen");
 }
 
