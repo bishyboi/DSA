@@ -214,6 +214,20 @@ TEST(Removal, Deg0_Root)
     EXPECT_EQ("2", avl.printPreOrder());
 }
 
+TEST(Search, InOrderSearch)
+{
+    AVLTree avl = AVLTree();
+
+    avl.insert("seen", 1);
+    avl.insert("seven", 2);
+    avl.insert("seven", 3);
+    avl.insert("seven", 4);
+    avl.insert("se7en", 5);
+    avl.insert("seven", 6);
+    avl.insert("sven", 7);
+
+    EXPECT_EQ("2, 3, 4, 6", avl.inOrderSearch("seven"));
+}
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

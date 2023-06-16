@@ -637,23 +637,26 @@ struct AVLTree
      */
     std::string inOrderSearch(std::string name)
     {
-        return inOrderSearch(this->root, name);
+        std::string printString = inOrderSearch(this->root, name);
+        printString.erase(printString.length() - 2, 2);
+        return printString;
     }
 
     std::string inOrderSearch(std::shared_ptr<Node> current, std::string name)
     {
-        if (current == nullptr)
+        if (current)
         {
-            return "";
-        }
-        else if (current->left == nullptr && current->right == nullptr)
-        {
-            if(current->getName() == name)
-                return std::to_string(current->getID());
+            std::shared_ptr<Node> left = current->left;
+            std::shared_ptr<Node> right = current->right;
+
+            if (current->getName() == name)
+                return inOrderSearch(left, name) + std::to_string(current->getID()) + ", "+ inOrderSearch(right, name);
+            else
+                return inOrderSearch(left, name) + inOrderSearch(right,name);
         }
         else
         {
-            return printInOrder(current->left) + ", " + current->getName() + ", " + printInOrder(current->right);
+            return "";
         }
     }
 
