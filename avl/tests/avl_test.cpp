@@ -160,7 +160,7 @@ TEST(Auxillary, getHeight1)
 
 TEST(Auxillary, getHeight2)
 {
-        AVLTree avl = AVLTree();
+    AVLTree avl = AVLTree();
     avl.insert("1", 1);
     avl.insert("7", 7);
     avl.insert("3", 3);
@@ -169,6 +169,49 @@ TEST(Auxillary, getHeight2)
 
     EXPECT_EQ("3, 1, 7, 5, 9", avl.printPreOrder());
     EXPECT_EQ(3, avl.getHeight());
+}
+
+TEST(Removal, Deg0_Leaf1)
+{
+    AVLTree avl = AVLTree();
+    avl.insert("1", 1);
+    avl.insert("2", 2);
+    avl.insert("3", 3);
+    avl.insert("4", 4);
+    avl.insert("5", 5);
+    avl.insert("6", 6);
+    avl.insert("7", 7);
+
+    avl.remove(7);
+
+    EXPECT_EQ("4, 2, 1, 3, 6, 5", avl.printPreOrder());
+}
+
+TEST(Removal, Deg0_Leaf2)
+{
+    AVLTree avl = AVLTree();
+    avl.insert("1", 1);
+    avl.insert("2", 2);
+    avl.insert("3", 3);
+    avl.insert("4", 4);
+    avl.insert("5", 5);
+    avl.insert("6", 6);
+    avl.insert("7", 7);
+
+    avl.remove(3);
+
+    EXPECT_EQ("4, 2, 1, 6, 5, 7", avl.printPreOrder());
+}
+
+TEST(Removal, Deg0_Root)
+{
+    AVLTree avl = AVLTree("1", 1);
+
+    avl.remove(1);
+
+    avl.insert("2", 2);
+
+    EXPECT_EQ("2", avl.printPreOrder());
 }
 
 int main(int argc, char **argv)

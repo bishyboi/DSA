@@ -5,21 +5,14 @@
 	2. You will submit this main.cpp file and any header files you have on Gradescope. 
 */
 
-// int main(){
-//     AVLTree avl = AVLTree();
-    
-//     std::string s;
+int main(){
+    AVLTree avl = AVLTree();
 
-//     avl.insert("3", 3);
-//     s = avl.printPreOrder();
+    avl.insert("1", 1);
 
-//     avl.insert("2", 1);
-//     s = avl.printPreOrder();
+    std::string s = avl.printPreOrder();
+    avl.remove(1);
 
-//     avl.insert("2", 2);
-//     s = avl.printPreOrder();
-
-
-//     std::cout<< s;
-// }
+    avl.insert("2", 2);
+}
 
