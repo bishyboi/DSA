@@ -205,63 +205,241 @@ TEST(Removal_Deg0, Leaf2)
 
 TEST(Removal_Deg0, Root)
 {
-    AVLTree avl = AVLTree("1", 1);
+    AVLTree avl = AVLTree();
 
-    avl.remove(1);
+    avl.insert("barry allen", 35);
+    avl.remove(35);
 
     avl.insert("2", 2);
 
     EXPECT_EQ("2", avl.printPreOrder());
 }
 
-TEST(Removal_Deg1, LeftChild_NoChild)
-{}
-
-TEST(Removal_Deg1, ROOT_LeftChild_NoChild)
-{}
-
-TEST(Removal_Deg1, LeftChild_Child)
-{}
-
-TEST(Removal_Deg1, ROOT_LeftChild_Child)
-{}
-
 TEST(Removal_Deg1, RightChild_NoChild)
-{}
+{
+    AVLTree avl = AVLTree("4", 4);
+
+    avl.insert("2", 2);
+    avl.insert("6", 6);
+    avl.insert("5", 5);
+
+    avl.remove(6);
+
+    EXPECT_EQ("4, 2, 5", avl.printPreOrder());
+}
 
 TEST(Removal_Deg1, ROOT_RightChild_NoChild)
-{}
+{
+    AVLTree avl = AVLTree("4", 4);
+    avl.insert("6", 6);
 
-TEST(Removal_Deg1, RightChild_Child)
-{}
+    avl.remove(4);
 
-TEST(Removal_Deg1, ROOT_RightChild_Child)
-{}
+    EXPECT_EQ("6", avl.printPreOrder());
+}
 
+TEST(Removal_Deg1, LeftChild_NoChild)
+{
+    AVLTree avl = AVLTree("4", 4);
+
+    avl.insert("2", 2);
+    avl.insert("5", 5);
+    avl.insert("1", 1);
+
+    avl.remove(1);
+
+    EXPECT_EQ("4, 2, 5", avl.printPreOrder());
+}
+
+TEST(Removal_Deg1, ROOT_LeftChild_NoChild)
+{
+    AVLTree avl = AVLTree("4", 4);
+
+    avl.insert("3", 3);
+    
+    avl.remove(4);
+
+    EXPECT_EQ("3", avl.printPreOrder());
+}
 
 TEST(Removal_Deg2, DirectChild_NoChild)
-{}
+{
+    AVLTree avl = AVLTree("4", 4);
+
+    avl.insert("2", 2);
+    avl.insert("7", 7);
+    avl.insert("8", 8);
+    avl.insert("6", 6);
+
+    avl.remove(7);
+
+    EXPECT_EQ("4, 2, 8, 6", avl.printPreOrder());
+}
 
 TEST(Removal_Deg2, ROOT_DirectChild_NoChild)
-{}
+{
+    AVLTree avl = AVLTree("4", 4);
+
+    avl.insert("2", 2);
+    avl.insert("5", 5);
+
+    avl.remove(4);
+
+    EXPECT_EQ("5, 2", avl.printPreOrder());
+}
 
 TEST(Removal_Deg2, DirectChild_Child)
-{}
+{
+    AVLTree avl = AVLTree("5", 5);
+    
+    avl.insert("4", 4);
+    avl.insert("8", 8);
+    avl.insert("3", 3);
+    avl.insert("6", 6);
+    avl.insert("10", 10);
+    avl.insert("12", 12);
+
+    avl.remove(8);
+
+    EXPECT_EQ("5, 4, 3, 10, 6, 12", avl.printPreOrder());
+}
 
 TEST(Removal_Deg2, ROOT_DirectChild_Child)
-{}
+{
+    AVLTree avl = AVLTree("5", 5);
+    
+    avl.insert("3", 3);
+    avl.insert("9", 9);
+    avl.insert("10", 10);
+
+    avl.remove(5);
+
+    EXPECT_EQ("9, 3, 10", avl.printPreOrder());
+}
 
 TEST(Removal_Deg2, IndirectChild_NoChild)
-{}
+{
+    AVLTree avl = AVLTree("10", 10);
+
+    avl.insert("5", 5);
+    avl.insert("15", 15);
+    avl.insert("0", 0);
+    avl.insert("7", 7);
+    avl.insert("12", 12);
+    avl.insert("17", 17);
+    avl.insert("-1", -1);
+    avl.insert("6", 6);
+    avl.insert("8", 8);
+
+    avl.remove(5);
+
+    EXPECT_EQ("10, 6, 0, -1, 7, 8, 15, 12, 17", avl.printPreOrder());
+}
 
 TEST(Removal_Deg2, ROOT_IndirectChild_NoChild)
-{}
+{
+    AVLTree avl = AVLTree("5", 5);
+    
+    avl.insert("3", 3);
+    avl.insert("10", 10);
+    avl.insert("2", 2);
+    avl.insert("4", 4);
+    avl.insert("6", 6);
+    avl.insert("12", 12);
+
+    avl.remove(5);
+
+    EXPECT_EQ("6, 3, 2, 4, 10, 12", avl.printPreOrder());
+}
 
 TEST(Removal_Deg2, IndirectChild_Child)
-{}
+{
+    AVLTree avl = AVLTree("50", 50);
+    
+    avl.insert("25", 25);
+    avl.insert("75", 75);
+
+    avl.insert("12", 12);
+    avl.insert("37", 37);
+    avl.insert("63", 63);
+    avl.insert("87", 87);
+
+    avl.insert("6", 6);
+    avl.insert("20", 20);
+    avl.insert("30", 30);
+    avl.insert("45", 45);
+    avl.insert("55", 55);
+    avl.insert("70", 70);
+    avl.insert("80", 80);
+    avl.insert("100", 100);
+
+    avl.insert("3", 3);
+    avl.insert("10", 10);
+    avl.insert("15", 15);
+    avl.insert("23", 23);
+    avl.insert("26", 26);
+    avl.insert("33", 33);
+    avl.insert("40", 40);
+    avl.insert("47", 47);
+    avl.insert("53", 53);
+    avl.insert("60", 60);
+    avl.insert("66", 66);
+    avl.insert("72", 72);
+    avl.insert("77", 77);
+    avl.insert("83", 83);
+    avl.insert("90", 90);
+    avl.insert("130", 130);
+    
+    avl.insert("76", 76);
+    avl.insert("78", 78);
+
+    avl.remove(75);
+
+    EXPECT_EQ("50, 25, 12, 6, 3, 10, 20, 15, 23, 37, 30, 26, 33, 45, 40, 47, 76, 63, 55, 53, 60, 70, 66, 72, 87, 80, 77, 78, 83, 100, 90, 130", avl.printPreOrder());
+}
 
 TEST(Removal_Deg2, ROOT_IndirectChild_Child)
-{}
+{
+    AVLTree avl = AVLTree("50", 50);
+    
+    avl.insert("25", 25);
+    avl.insert("75", 75);
+
+    avl.insert("12", 12);
+    avl.insert("37", 37);
+    avl.insert("63", 63);
+    avl.insert("87", 87);
+
+    avl.insert("6", 6);
+    avl.insert("20", 20);
+    avl.insert("30", 30);
+    avl.insert("45", 45);
+    avl.insert("55", 55);
+    avl.insert("70", 70);
+    avl.insert("80", 80);
+    avl.insert("100", 100);
+
+    avl.insert("3", 3);
+    avl.insert("10", 10);
+    avl.insert("15", 15);
+    avl.insert("23", 23);
+    avl.insert("26", 26);
+    avl.insert("33", 33);
+    avl.insert("40", 40);
+    avl.insert("47", 47);
+    avl.insert("53", 53);
+    avl.insert("60", 60);
+    avl.insert("66", 66);
+    avl.insert("72", 72);
+    avl.insert("77", 77);
+    avl.insert("83", 83);
+    avl.insert("90", 90);
+    avl.insert("130", 130);
+
+    avl.remove(50);
+
+    EXPECT_EQ("53, 25, 12, 6, 3, 10, 20, 15, 23, 37, 30, 26, 33, 45, 40, 47, 75, 63, 55, 60, 70, 66, 72, 87, 80, 77, 83, 100, 90, 130", avl.printPreOrder());
+}
 
 TEST(Removal_N, idkMan)
 {}

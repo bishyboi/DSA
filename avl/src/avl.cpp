@@ -7,15 +7,15 @@
 
 int main(){
     AVLTree avl = AVLTree();
+    avl.insert("1", 1);
+    avl.insert("2", 2);
+    avl.insert("3", 3);
+    avl.insert("4", 4);
+    avl.insert("5", 5);
+    avl.insert("6", 6);
+    avl.insert("7", 7);
 
-    avl.insert("seen", 1);
-    avl.insert("seven", 2);
-    avl.insert("seven", 3);
-    avl.insert("seven", 4);
-    avl.insert("se7en", 5);
-    avl.insert("seven", 6);
-    avl.insert("sven", 7);
-
-    avl.inOrderSearch("sixteen");
+    avl.remove(4);
+    std::string s = avl.printPreOrder();
 }
 
