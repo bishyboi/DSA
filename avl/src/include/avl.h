@@ -134,8 +134,8 @@ struct AVLTree
             return true;
         }
 
-        std::shared_ptr current = this->root;
-        std::shared_ptr insert = insertion;
+        std::shared_ptr<Node> current = this->root;
+        std::shared_ptr<Node> insert = insertion;
         return insertOnNode(current, insert);
     }
 
@@ -693,7 +693,7 @@ struct AVLTree
             std::shared_ptr<Node> right = current->right;
 
             if (current->getName() == name)
-                return inOrderSearch(left, name) + std::to_string(current->getID()) + ", " + inOrderSearch(right, name);
+                return inOrderSearch(left, name) + std::to_string(current->getID()) + "\n" + inOrderSearch(right, name);
             else
                 return inOrderSearch(left, name) + inOrderSearch(right, name);
         }

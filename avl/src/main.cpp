@@ -1,4 +1,4 @@
-#include "include/avl.h"
+#include "avl.h"
 #include <vector>
 /* Note:
     1. You will have to comment main() when unit testing your code because catch uses its own main().
