@@ -24,6 +24,8 @@ bool isName(std::string s)
 {
     if (s.front() == '\"' && s.back() == '\"')
     {
+        s.erase(0, 1);
+        s.erase(s.length() - 1, 1);
         for(char c : s)
         {
             if(c != ' ' && !isalpha(c))
