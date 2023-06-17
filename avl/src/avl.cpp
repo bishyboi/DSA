@@ -1,25 +1,169 @@
 #include "include/avl.h"
-
-/* Note: 
-	1. You will have to comment main() when unit testing your code because catch uses its own main().
-	2. You will submit this main.cpp file and any header files you have on Gradescope. 
+#include <vector>
+/* Note:
+    1. You will have to comment main() when unit testing your code because catch uses its own main().
+    2. You will submit this main.cpp file and any header files you have on Gradescope.
 */
+bool isID(std::string s)
+{
+    if(s.length() != 8)
+        return false;
+    else
+    {
+        for (char c : s)
+        {
+            if( !isdigit(c))
+                return false;
+        }
 
-// int main(){
-//     AVLTree avl = AVLTree();
+        return true;
+    }
+}
 
-//     std::string s = avl.printPreOrder();
+bool isName(std::string s)
+{
+    if (s.front() == '\"' && s.back() =='\"')
+        return true;
+    else
+        return false;
+}
+std::vector<std::string> separateString(std::string &line)
+{
+    std::vector<std::string> args;
+    std::string input = "";
+    int spaceIdx = 0;
 
-//     avl.insert("barry allen", 35);
+    while (spaceIdx !=-1)
+    {
+        spaceIdx = line.find(" ");
+        
+        input = line.substr(0, spaceIdx);
+        line.erase(0, spaceIdx+1);
 
-//     s = avl.printPreOrder();
+        args.push_back(input);
+    }
 
-//     avl.remove(35);
+    return args;
+}
 
-//     s = avl.printPreOrder();
+bool determineValidCMD(std::vector<std::string> &args)
+{
+    if (args[0] == "insert")
+    {
+        if (isName(args[1]))
+            return isID(args[2]);
+        else
+            return false;
+    }
+    
+    else if (args[0] == "remove")
+    {
+        if (isID(args[1]))
+            return true;
+        else
+            return false;
+    }
+    else if (args[0] == "search")
+    {
+        if (isID(args[1]) || isName(args[1]))
+            return true;
+        else
+            return false;
+    }
+    else if (args[0] == "printInorder")
+        return true;
+    else if (args[0] == "printPreorder")
+        return true;
+    else if (args[0] == "printPostorder")
+        return true;
+    else if (args[0] == "printLevelCount")
+        return true;
+    else if (args[0] == "removeInOrder")
+        return true;
 
-//     avl.insert("2", 2);
+    return false;
+}
 
-//     s = avl.printPreOrder();
-// }
+bool executeCMD(std::vector<std::string> args, AVLTree avl)
+{
+    if (args[0] == "insert")
+    {
+        return avl.insert(args[1], std::stoi(args[2]));
+    }
+    
+    else if (args[0] == "remove")
+    {
+        return avl.remove(std::stoi(args[1]));
+    }
+    else if (args[0] == "search")
+    {
+        std::string output ="";
+        if (isID(args[1]))
+            output = avl.search(std::stoi(args[1]));
+        else
+            output = avl.inOrderSearch(args[1]);
+        
+        if (output == "")
+            return false;
+        else
+            std::cout<< output;
+            return true;
+    }
+    else if (args[0] == "printInorder")
+    {
+        std::cout<< avl.printInOrder();
+        return true;
+    }
+    else if (args[0] == "printPreorder")
+    {
+        std::cout<< avl.printPreOrder();
+        return true;
+    }
+    else if (args[0] == "printPostorder")
+    {
+        std::cout<< avl.printPostOrder();
+        return true;
+    }
+    else if (args[0] == "printLevelCount")
+    {
+        std::cout<< avl.getHeight();
+        return true;
+    }
+    else if (args[0] == "removeInOrder")
+    {
+        return avl.removeInOrder(std::stoi(args[1]));
+    }
+    return false;  
+}
 
+int main()
+{
+    int commandCount = 0;
+    std::string line = "";
+    std::vector<std::string> args;
+    AVLTree avl = AVLTree();
+
+    std::getline(std::cin, line);
+
+    args = separateString(line);
+
+    commandCount = std::stoi(args[0]);
+
+    for(int i =0; i< commandCount; i++)
+    {
+        std::getline(std::cin,line);
+        args = separateString(line);
+
+        if(determineValidCMD(args))
+        {
+            if(!executeCMD(args, avl))
+                std::cout<< "unsuccessful";
+        }
+        else
+            std::cout<< "unsuccessful";
+
+        std::cout<< "\n";
+    }
+
+    return 0;
+}

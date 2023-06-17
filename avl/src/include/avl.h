@@ -601,33 +601,35 @@ struct AVLTree
     {
         std::shared_ptr<Node> current = this->root;
 
-        int removeID = removeInOrderSearch(current, n);
+        int removeID = -1;
 
-        if (!removeID)
+        removeInOrderSearch(current, n, removeID);
+
+        if (removeID == -1)
             return false;
         else
             return remove(removeID);
     }
 
-    void removeInOrderSearch(std::shared_ptr<Node> current, int n)
+    void removeInOrderSearch(std::shared_ptr<Node> current, int n, int &removeID)
     {
         static int i = 0;
 
         if (!current)
             return;
-        
+
         if (i <= n)
         {
             std::shared_ptr<Node> left = current->left;
             std::shared_ptr<Node> right = current->right;
 
-            removeInOrderSearch(left, n);
+            removeInOrderSearch(left, n, removeID);
             i++;
 
             if (i == n)
-                
-            
-            removeInOrderSearch(right, n);
+                removeID = current->getID();
+
+            removeInOrderSearch(right, n, removeID);
         }
         else
             return;
