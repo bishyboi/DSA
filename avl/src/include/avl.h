@@ -602,7 +602,7 @@ struct AVLTree
 
         int removeID = -1;
 
-        removeInOrderSearch(current, n, removeID);
+        removeInOrderSearch(current, n+1, removeID);
 
         if (removeID == -1)
             return false;
@@ -713,7 +713,7 @@ struct AVLTree
 
         if (printString != "")
         {
-            //printString.erase(0, 1);
+            printString.erase(0, 2);
             //printString.erase(printString.length() - 2, 2);
         }
 
@@ -734,11 +734,11 @@ struct AVLTree
         }
         else if (current->left == nullptr && current->right == nullptr)
         {
-            return current->getName();
+            return ", " + current->getName();
         }
         else
         {
-            return printInOrder(current->left) + ", " + current->getName() + ", " + printInOrder(current->right);
+            return printInOrder(current->left) + ", " + current->getName() + printInOrder(current->right);
         }
     }
 

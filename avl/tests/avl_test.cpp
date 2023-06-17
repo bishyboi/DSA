@@ -443,6 +443,19 @@ TEST(Removal_Deg2, ROOT_IndirectChild_Child)
     EXPECT_EQ("53, 25, 12, 6, 3, 10, 20, 15, 23, 37, 30, 26, 33, 45, 40, 47, 75, 63, 55, 60, 70, 66, 72, 87, 80, 77, 83, 100, 90, 130", avl.printPreOrder());
 }
 
+TEST(Removal_Deg2, BrianBriana)
+{
+    AVLTree avl = AVLTree("4", 4);
+    avl.insert("3", 3);
+    avl.insert("8", 8);
+    avl.insert("9", 9);
+
+    avl.remove(4);
+    avl.removeInOrder(2);
+
+    EXPECT_EQ("3, 9", avl.printInOrder());
+}
+
 TEST(Removal_N, idkMan)
 {
     AVLTree avl = AVLTree();

@@ -78,7 +78,7 @@ bool determineValidCMD(std::vector<std::string> &args)
         return true;
     else if (args[0] == "printLevelCount")
         return true;
-    else if (args[0] == "removeInorder")
+    else if (args[0] == "removeInOrder")
         return true;
 
     return false;
@@ -102,6 +102,9 @@ bool executeCMD(std::vector<std::string> args, AVLTree &avl)
 
     else if (args[0] == "remove")
     {
+        args[1].erase(0, 1);
+        args[1].erase(args[1].length() - 1, 1);
+
         if (avl.remove(std::stoi(args[1])))
         {
             std::cout << "successful";
@@ -148,15 +151,9 @@ bool executeCMD(std::vector<std::string> args, AVLTree &avl)
         std::cout << avl.getHeight();
         return true;
     }
-    else if (args[0] == "removeInorder")
+    else if (args[0] == "removeInOrder")
     {
-        if (avl.removeInOrder(std::stoi(args[1])))
-        {
-            std::cout << "successful";
-            return true;
-        }
-        else
-            return false;
+        return avl.removeInOrder(std::stoi(args[1]));
     }
     return false;
 }
