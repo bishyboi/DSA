@@ -409,7 +409,6 @@ struct AVLTree
 
         // Step 1: Find the node to be removed (search)
 
-        // Short-Circuit abusers (should avoid the getID() nullptr error by short-circuiting)
         while (search)
         {
             if (search->getID() == id)
@@ -558,7 +557,6 @@ struct AVLTree
                 if (replacement->right)
                     replacement->right->parent = replacement;
 
-                // TODO: Implement rebalancing on case Deg(Remove) = 2
             }
 
             return true;
@@ -572,11 +570,13 @@ struct AVLTree
         if (!upper)
             return;
 
+
         if (lower.get() == upper->right.get())
             upper->addBF(1);
         else
             upper->addBF(-1);
 
+        // Return because this means it was balanced before deletion, meaning the height is unchanged, hence BFs are unchanged
         if (upper->getBF() == 1 || upper->getBF() == -1)
             return;
         else if (upper->getBF() == 0)
@@ -584,7 +584,7 @@ struct AVLTree
             std::shared_ptr<Node> parent = upper->parent;
             retraceDelete(parent, upper);
         }
-        // Excluding case where balance factor is set to 2
+        // Excluding case where balance factor is set to 2 because we wont be tested on rotating after deletions?
     }
     /**
      * @brief

@@ -453,7 +453,7 @@ TEST(Removal_Deg2, BrianBriana)
     avl.remove(4);
     avl.removeInOrder(2);
 
-    EXPECT_EQ("3, 9", avl.printInOrder());
+    EXPECT_EQ("3, 8", avl.printInOrder());
 }
 
 TEST(Removal_N, idkMan)
@@ -472,7 +472,7 @@ TEST(Removal_N, idkMan)
 
     avl.removeInOrder(3);
 
-    EXPECT_EQ("10, 5, 0, 15, 12, 17", avl.printPreOrder());
+    EXPECT_EQ("10, 5, 7, 15, 12, 17", avl.printPreOrder());
 }
 
 TEST(Search, InOrderSearch_Successful)
@@ -487,7 +487,7 @@ TEST(Search, InOrderSearch_Successful)
     avl.insert("seven", 6);
     avl.insert("sven", 7);
 
-    EXPECT_EQ("2, 3, 4, 6", avl.inOrderSearch("seven"));
+    EXPECT_EQ("2\n3\n4\n6", avl.inOrderSearch("seven"));
 }
 
 

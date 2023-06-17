@@ -23,7 +23,14 @@ bool isID(std::string s)
 bool isName(std::string s)
 {
     if (s.front() == '\"' && s.back() == '\"')
+    {
+        for(char c : s)
+        {
+            if(c != ' ' && !isalpha(c))
+                return false;
+        }
         return true;
+    }
     else
         return false;
 }
