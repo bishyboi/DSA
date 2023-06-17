@@ -405,7 +405,6 @@ struct AVLTree
      */
     bool remove(int id)
     {
-        std::cout << "HELP";
         std::shared_ptr<Node> search = this->root;
 
         // Step 1: Find the node to be removed (search)
@@ -680,7 +679,7 @@ struct AVLTree
         if (printString == "")
             printString = "unsuccessful";
         else
-            printString.erase(printString.length() - 2, 2);
+            printString.erase(printString.length() - 1, 1);
 
         return printString;
     }
@@ -714,8 +713,8 @@ struct AVLTree
 
         if (printString != "")
         {
-            printString.erase(0, 2);
-            printString.erase(printString.length() - 2, 2);
+            //printString.erase(0, 1);
+            //printString.erase(printString.length() - 2, 2);
         }
 
         return printString;
