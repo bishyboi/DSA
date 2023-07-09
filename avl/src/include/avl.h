@@ -134,8 +134,8 @@ struct AVLTree
             return true;
         }
 
-        std::shared_ptr current = this->root;
-        std::shared_ptr insert = insertion;
+        std::shared_ptr<Node> current = this->root;
+        std::shared_ptr<Node> insert = insertion;
         return insertOnNode(current, insert);
     }
 
@@ -335,6 +335,7 @@ struct AVLTree
         lower->setBF(0);
         upper->setBF(0);
     }
+
     void retraceInsert(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
     {
         // CHeck if the last ancestor (or the root) has been updated
@@ -402,23 +403,20 @@ struct AVLTree
      * the deleted node has two children.
      * @param id Unique 8-Digit ID number
      */
-    void remove(const int id)
+    bool remove(int id)
     {
         std::shared_ptr<Node> search = this->root;
 
         // Step 1: Find the node to be removed (search)
 
-        // Short-Circuit abusers (should avoid the getID() nullptr error by short-circuiting)
-        while (search != nullptr || search->getID() != id)
+        while (search)
         {
-            if (search->getID() > id)
-            {
+            if (search->getID() == id)
+                break;
+            else if (search->getID() > id)
                 search = search->left;
-            }
             else
-            {
                 search = search->right;
-            }
         }
 
         // Step 2: Find search node's replacement
@@ -431,26 +429,27 @@ struct AVLTree
             {
                 if (search.get() != this->root.get())
                 {
-                    search->parent.reset();
-
                     if (search.get() == search->parent->right.get())
                     {
                         search->parent->right.reset();
+                        search->parent->addBF(1);
                     }
                     else
                     {
                         search->parent->left.reset();
+                        search->parent->addBF(-1);
                     }
                 }
                 else
                 {
                     // If it's the root node, and only node in tree, then we can just delete the root
                     this->root.reset();
+                    return true;
                 }
                 // The parent should be the only pointer on the node, with shared_ptr calling destructor
                 // after this method falls out of scope
 
-                //TODO: Rebalance after deletion
+                retraceDelete(search->parent->parent, search->parent);
             }
             //** Case 2: Search has only one child
             else if (!search->left || !search->right)
@@ -465,45 +464,23 @@ struct AVLTree
                         // If search is the right child of its parent
                         if (search.get() == search->parent->right.get())
                         {
-                            if (search->left)
-                            {
-                                search->parent->right = search->left;
-                                search->left->parent = search->parent;
-                            }
-                            else
-                            {
-                                search->parent->right = search->right;
-                                search->right->parent = search->parent;
-                            }
+                            search->parent->right = search->left;
+                            search->left->parent = search->parent;
                         }
                         else
                         {
-                            if (search->left)
-                            {
-                                search->parent->left = search->left;
-                                search->left->parent = search->parent;
-                            }
-                            else
-                            {
-                                search->parent->left = search->right;
-                                search->right->parent = search->parent;
-                            }
+                            search->parent->left = search->left;
+                            search->left->parent = search->parent;
                         }
-                    } 
+                    }
                     // Case: Search is a root node
                     else
                     {
-                        if (search->left)
-                        {
-                            this->root = search->left;
-                            search->left->parent.reset();
-                        }
-                        else
-                        {
-                            this->root = search->right;
-                            search->right->parent.reset();
-                        }
+                        this->root = search->left;
+                        search->left->parent.reset();
                     }
+
+                    retraceDelete(search->left->parent, search->left);
                 }
                 else
                 // Case: Search has only a right child
@@ -527,9 +504,9 @@ struct AVLTree
                         this->root = search->right;
                         search->right->parent.reset();
                     }
-                }
 
-                //TODO: Rebalance after deletion
+                    retraceDelete(search->right->parent, search->right);
+                }
             }
             //** Case 3: Search has two children
             else
@@ -539,17 +516,18 @@ struct AVLTree
 
                 while (replacement->left)
                     replacement = replacement->left;
-                
+
+                std::shared_ptr<Node> replacement_parent = replacement->parent;
+
                 //**SWAP SEARCH AND REPLACEMENT
                 // Manage replacement's right child (it can only have a right child)
-                if( replacement.get() == replacement->parent->right.get())
+                if (replacement.get() == replacement->parent->right.get())
                     replacement->parent->right = replacement->right;
                 else
                     replacement->parent->left = replacement->right;
 
-                if (replacement->right) // Replacement must be a left child
+                if (replacement->right)
                     replacement->right->parent = replacement->parent;
-
 
                 // Setting Replacement's new parent relationship
                 if (search.get() == this->root.get())
@@ -579,11 +557,35 @@ struct AVLTree
                 if (replacement->right)
                     replacement->right->parent = replacement;
 
-                //TODO: Rebalance after deletion
             }
+
+            return true;
         }
+        else
+            return false;
     }
 
+    void retraceDelete(std::shared_ptr<Node> upper, std::shared_ptr<Node> lower)
+    {
+        if (!upper)
+            return;
+
+
+        if (lower.get() == upper->right.get())
+            upper->addBF(1);
+        else
+            upper->addBF(-1);
+
+        // Return because this means it was balanced before deletion, meaning the height is unchanged, hence BFs are unchanged
+        if (upper->getBF() == 1 || upper->getBF() == -1)
+            return;
+        else if (upper->getBF() == 0)
+        {
+            std::shared_ptr<Node> parent = upper->parent;
+            retraceDelete(parent, upper);
+        }
+        // Excluding case where balance factor is set to 2 because we wont be tested on rotating after deletions?
+    }
     /**
      * @brief
      * Remove the Nth GatorID from the in-order traversal of the tree (N = 0 for the first item, etc).
@@ -594,8 +596,42 @@ struct AVLTree
      * If the Nth GatorID does not exist within the tree, print “unsuccessful”.
      * @param n Nth Gator-ID from the IN-ORDER traversal
      */
-    void removeInOrder(const int n)
+    bool removeInOrder(int n)
     {
+        std::shared_ptr<Node> current = this->root;
+
+        int removeID = -1;
+
+        removeInOrderSearch(current, n+1, removeID);
+
+        if (removeID == -1)
+            return false;
+        else
+            return remove(removeID);
+    }
+
+    void removeInOrderSearch(std::shared_ptr<Node> current, int n, int &removeID)
+    {
+        static int i = 0;
+
+        if (!current)
+            return;
+
+        if (i <= n)
+        {
+            std::shared_ptr<Node> left = current->left;
+            std::shared_ptr<Node> right = current->right;
+
+            removeInOrderSearch(left, n, removeID);
+            i++;
+
+            if (i == n)
+                removeID = current->getID();
+
+            removeInOrderSearch(right, n, removeID);
+        }
+        else
+            return;
     }
 
     /**
@@ -605,9 +641,24 @@ struct AVLTree
      * If the ID does not exist within the tree, print “unsuccessful”.
      * @param id Unique 8-Digit ID number
      */
-    std::string search(const int id)
+    std::string search(int id)
     {
-        // TODO: implement
+        return search(this->root, id);
+    }
+
+    std::string search(std::shared_ptr<Node> current, int id)
+    {
+        if (!current)
+            return "unsuccessful";
+        else
+        {
+            if (current->getID() > id)
+                return search(current->left, id);
+            else if (current->getID() < id)
+                return search(current->right, id);
+            else
+                return current->getName();
+        }
     }
 
     /**
@@ -621,9 +672,34 @@ struct AVLTree
      *
      * @param name Name of the student(s)
      */
-    std::string search(const std::string name)
+    std::string inOrderSearch(std::string name)
     {
-        // TODO: implement
+        std::string printString = inOrderSearch(this->root, name);
+
+        if (printString == "")
+            printString = "unsuccessful";
+        else
+            printString.erase(printString.length() - 1, 1);
+
+        return printString;
+    }
+
+    std::string inOrderSearch(std::shared_ptr<Node> current, std::string name)
+    {
+        if (current)
+        {
+            std::shared_ptr<Node> left = current->left;
+            std::shared_ptr<Node> right = current->right;
+
+            if (current->getName() == name)
+                return inOrderSearch(left, name) + std::to_string(current->getID()) + "\n" + inOrderSearch(right, name);
+            else
+                return inOrderSearch(left, name) + inOrderSearch(right, name);
+        }
+        else
+        {
+            return "";
+        }
     }
 
     /**
@@ -635,8 +711,12 @@ struct AVLTree
     {
         std::string printString = printInOrder(this->root);
 
-        printString.erase(0, 2);
-        printString.erase(printString.length() - 2, 2);
+        if (printString != "")
+        {
+            printString.erase(0, 2);
+            //printString.erase(printString.length() - 2, 2);
+        }
+
         return printString;
     }
 
@@ -654,11 +734,11 @@ struct AVLTree
         }
         else if (current->left == nullptr && current->right == nullptr)
         {
-            return current->getName();
+            return ", " + current->getName();
         }
         else
         {
-            return printInOrder(current->left) + ", " + current->getName() + ", " + printInOrder(current->right);
+            return printInOrder(current->left) + ", " + current->getName() + printInOrder(current->right);
         }
     }
 
@@ -670,8 +750,9 @@ struct AVLTree
     std::string printPreOrder()
     {
         std::string printString = printPreOrder(this->root);
+        if (printString != "")
+            printString.erase(printString.length() - 2, 2);
 
-        printString.erase(printString.length() - 2, 2);
         return printString;
     }
 
@@ -704,7 +785,8 @@ struct AVLTree
     {
         std::string printString = printPostOrder(this->root);
 
-        printString.erase(0, 2);
+        if (printString != "")
+            printString.erase(0, 2);
         return printString;
     }
 

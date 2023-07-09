@@ -79,6 +79,8 @@
         "xutility": "cpp",
         "any": "cpp",
         "array": "cpp",
-        "unordered_set": "cpp"
+        "unordered_set": "cpp",
+        "coroutine": "cpp",
+        "resumable": "cpp"
     }
 }
